@@ -58,6 +58,8 @@ h2{font-size:1.25rem;letter-spacing:-.01em;margin:0 0 .75rem}
 .hnav a{padding:8px 12px;border-radius:999px;font-size:.92rem;color:var(--muted)}
 .hnav a.on,.hnav a:hover{color:var(--text);background:var(--surface)}
 .tools{display:flex;align-items:center;gap:6px;margin-left:auto}
+@media(max-width:420px){.logo small{display:none}.tools{gap:4px}.ibtn{width:36px;height:36px}.cur{padding:0 6px}}
+@media(max-width:380px){#lgName{display:none}.top .wrap{gap:8px}}
 .ibtn{display:grid;place-items:center;width:38px;height:38px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;position:relative}
 .cur{height:38px;border-radius:999px;border:1px solid var(--line);background:var(--surface);padding:0 10px;font-size:.85rem;font-weight:600}
 .badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--gold);color:#000;font-size:.7rem;font-weight:700;display:grid;place-items:center}
@@ -235,6 +237,7 @@ footer a{display:block;padding:3px 0}
         <option value="XOF">FCFA</option><option value="EUR">€ EUR</option><option value="USD">$ USD</option>
       </select>
       <button class="ibtn" id="themeBtn" aria-label="Changer de thème"></button>
+      <a class="ibtn" href="admin.html" aria-label="Connexion administrateur" title="Connexion administrateur" id="adminLink"><span id="lockIc"></span></a>
       <a class="ibtn" href="#/panier" aria-label="Panier"><span id="cartIc"></span><span class="badge" data-n="0" id="badge1">0</span></a>
     </div>
   </div>
@@ -248,7 +251,7 @@ footer a{display:block;padding:3px 0}
 <footer>
   <div class="wrap cols">
     <div><b id="fName"></b><br><span id="fAddr"></span><br><span id="fOpen"></span><br><br><span id="fText"></span></div>
-    <div><b>Boutique</b><a href="#/catalogue">Catalogue</a><a href="#/boutique">Horaires & plan</a><a href="#/suivi">Suivre une commande</a></div>
+    <div><b>Boutique</b><a href="#/catalogue">Catalogue</a><a href="#/boutique">Horaires & plan</a><a href="#/suivi">Suivre une commande</a><a href="admin.html">🔒 Espace administrateur</a></div>
     <div><b>Contact</b><a id="fTel" href="#"></a><a id="fWa" href="#" target="_blank" rel="noopener">WhatsApp</a><a id="fMail" href="#"></a></div>
   </div>
   <div class="wrap small" style="margin-top:18px">© <span id="yr"></span> <span id="fCopy"></span></div>
@@ -323,6 +326,7 @@ var I = {
   trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
   shield: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
   phoneM: '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>',
+  lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
   plus: '<path d="M12 5v14M5 12h14"/>'
 };
 function ic(n, s) { s = s || 20; return '<svg class="ic" width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (I[n] || '') + '</svg>'; }
@@ -986,7 +990,7 @@ function applySite(site) {
 
 /* ================= DÉMARRAGE ================= */
 function boot() {
-  $('#hsIc').innerHTML = ic('search', 18); $('#cartIc').innerHTML = ic('cart', 20);
+  $('#hsIc').innerHTML = ic('search', 18); $('#cartIc').innerHTML = ic('cart', 20); $('#lockIc').innerHTML = ic('lock', 18);
   $$('[data-ic]').forEach(function (s) { s.innerHTML = ic(s.dataset.ic, 22); });
   paintTheme();
   matchMedia('(prefers-color-scheme: dark)').addEventListener && matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintTheme);
