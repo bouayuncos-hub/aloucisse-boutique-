@@ -1,0 +1,998 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alou Cissé — Électronique & High-Tech à Bamako</title>
+<meta name="description" content="Smartphones, ordinateurs, audio, objets connectés. Boutique à Sébénikoro, Bamako : retrait en magasin, livraison à Bamako et expédition internationale. Orange Money, Moov Money, carte, PayPal.">
+<meta name="theme-color" content="#f5f5f7" id="themeColor">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta property="og:title" content="Alou Cissé — Électronique & High-Tech">
+<meta property="og:description" content="Boutique high-tech à Sébénikoro, Bamako. Livraison Bamako & international.">
+<script>
+  // Thème appliqué avant l'affichage (évite le flash)
+  try { var t = localStorage.getItem('ac_theme'); if (t) document.documentElement.dataset.theme = JSON.parse(t); } catch (e) {}
+</script>
+<style>
+:root{
+  --bg:#f5f5f7;--surface:#fff;--surface2:#fafafa;--text:#1d1d1f;--muted:#6e6e73;--line:#e3e3e8;
+  --ink:#111;--ink-text:#fff;--gold:#c8961e;--gold-soft:#fbf3df;--ok:#18864b;--ok-soft:#e5f5ec;
+  --warn:#b26a00;--warn-soft:#fff3e0;--danger:#d92d20;--danger-soft:#fdecea;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.06);--r:18px;--r2:12px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#000;--surface:#141416;--surface2:#1c1c1f;--text:#f5f5f7;--muted:#a1a1a6;--line:#2c2c30;
+  --ink:#f5f5f7;--ink-text:#000;--gold:#e5b443;--gold-soft:#2a2210;--ok:#3ccf7f;--ok-soft:#10261a;
+  --warn:#ffb340;--warn-soft:#2b1f0b;--danger:#ff6961;--danger-soft:#2d1312;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme=dark]{
+  --bg:#000;--surface:#141416;--surface2:#1c1c1f;--text:#f5f5f7;--muted:#a1a1a6;--line:#2c2c30;
+  --ink:#f5f5f7;--ink-text:#000;--gold:#e5b443;--gold-soft:#2a2210;--ok:#3ccf7f;--ok-soft:#10261a;
+  --warn:#ffb340;--warn-soft:#2b1f0b;--danger:#ff6961;--danger-soft:#2d1312;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 var(--font);-webkit-font-smoothing:antialiased;padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button,input,select,textarea{font:inherit;color:inherit}
+.ic{flex:none;vertical-align:middle}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.muted{color:var(--muted)}.small{font-size:.875rem}.center{text-align:center}
+h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.15;letter-spacing:-.02em;margin:.2em 0 .4em}
+h2{font-size:1.25rem;letter-spacing:-.01em;margin:0 0 .75rem}
+/* Header */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;height:60px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.logo b{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--ink);color:var(--gold);font-size:.9rem;letter-spacing:.02em}
+.logo small{display:block;font-weight:500;font-size:.7rem;color:var(--muted);line-height:1}
+.hsearch{flex:1;display:none;max-width:420px;margin-left:auto;position:relative}
+.hsearch input{width:100%;height:38px;border-radius:999px;border:1px solid var(--line);background:var(--surface);padding:0 14px 0 38px}
+.hsearch .ic{position:absolute;left:12px;top:9px;color:var(--muted)}
+.hnav{display:none;gap:4px;margin-left:8px}
+.hnav a{padding:8px 12px;border-radius:999px;font-size:.92rem;color:var(--muted)}
+.hnav a.on,.hnav a:hover{color:var(--text);background:var(--surface)}
+.tools{display:flex;align-items:center;gap:6px;margin-left:auto}
+.ibtn{display:grid;place-items:center;width:38px;height:38px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;position:relative}
+.cur{height:38px;border-radius:999px;border:1px solid var(--line);background:var(--surface);padding:0 10px;font-size:.85rem;font-weight:600}
+.badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--gold);color:#000;font-size:.7rem;font-weight:700;display:grid;place-items:center}
+.badge[data-n="0"]{display:none}
+@media(min-width:900px){.hsearch{display:block}.hnav{display:flex}.bnav{display:none!important}body{padding-bottom:0}.tools{margin-left:0}}
+/* Bottom nav (mobile) */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.bnav a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 7px;font-size:.7rem;color:var(--muted);position:relative}
+.bnav a.on{color:var(--text)}
+.bnav .badge{top:2px;right:calc(50% - 22px)}
+.offline{background:var(--warn-soft);color:var(--warn);font-size:.85rem;text-align:center;padding:6px 12px}
+.demo{background:var(--gold-soft);color:var(--gold);font-size:.8rem;text-align:center;padding:5px 12px}
+main{min-height:60vh;padding:20px 0 40px}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:999px;border:0;background:var(--ink);color:var(--ink-text);font-weight:600;cursor:pointer;white-space:nowrap;transition:transform .1s,opacity .2s}
+.btn:active{transform:scale(.98)}.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.gold{background:var(--gold);color:#000}
+.btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--line)}
+.btn.wa{background:#1fae5b;color:#fff}
+.btn.sm{height:38px;padding:0 16px;font-size:.9rem}
+.btn.block{width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+/* Hero */
+.hero{border-radius:28px;background:radial-gradient(120% 140% at 85% 0%,#3a2a05 0%,#0d0d0f 55%);color:#fff;padding:clamp(28px,6vw,64px);position:relative;overflow:hidden}
+.hero h1{color:#fff;max-width:14ch}
+.hero p{color:#c7c7cc;max-width:46ch;margin:0 0 22px;font-size:1.05rem}
+.hero .btn.ghost{background:transparent;color:#fff;border-color:#48484a}
+.hero .kicker{color:var(--gold);font-weight:600;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase}
+.hero:after{content:"";position:absolute;right:-60px;bottom:-60px;width:260px;height:260px;border-radius:50%;border:40px solid rgba(229,180,67,.12)}
+.perks{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0 28px}
+.perk{background:var(--surface);border-radius:var(--r2);padding:14px;display:flex;gap:10px;align-items:flex-start;font-size:.88rem;box-shadow:var(--shadow)}
+.perk b{display:block;font-size:.92rem}
+.perk .ic{color:var(--gold);margin-top:2px}
+@media(min-width:900px){.perks{grid-template-columns:repeat(4,1fr)}}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:30px 0 12px}
+.sec a{color:var(--gold);font-weight:600;font-size:.92rem}
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cat{background:var(--surface);border-radius:var(--r2);padding:12px 8px;text-align:center;font-size:.85rem;font-weight:600;box-shadow:var(--shadow)}
+.cat img{width:100%;aspect-ratio:10/9;border-radius:10px;margin-bottom:8px;object-fit:cover}
+@media(min-width:900px){.cats{grid-template-columns:repeat(6,1fr)}}
+/* Product grid */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1000px){.grid{grid-template-columns:repeat(4,1fr);gap:16px}}
+.pc{background:var(--surface);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.pimg{position:relative;background:var(--surface2)}
+.pimg img{width:100%;aspect-ratio:10/9;object-fit:cover}
+.tag{position:absolute;top:10px;left:10px;background:var(--danger);color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:999px}
+.pb{padding:12px 12px 14px;display:flex;flex-direction:column;gap:3px;flex:1}
+.brand{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.pn{font-weight:600;font-size:.92rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pp{font-weight:700;margin-top:auto;padding-top:6px;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:6px}.pp s{margin-left:0!important}
+.pp s,.price s{color:var(--muted);font-weight:400;font-size:.82em;margin-left:6px}
+.pfoot{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.add{width:36px;height:36px;border-radius:999px;border:0;background:var(--ink);color:var(--ink-text);display:grid;place-items:center;cursor:pointer;flex:none}
+.add[disabled]{opacity:.3;cursor:not-allowed}
+.stk{font-size:.76rem;font-weight:600}
+.stk.ok{color:var(--ok)}.stk.low{color:var(--warn)}.stk.out{color:var(--danger)}
+/* Filters */
+.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:.86rem;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--ink-text);border-color:var(--ink)}
+.tbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tbar input[type=search]{flex:1;min-width:180px}
+.in,select.in,textarea.in,.tbar input[type=search],.tbar select{height:44px;border-radius:var(--r2);border:1px solid var(--line);background:var(--surface);padding:0 12px;width:100%}
+.tbar select{width:auto}
+textarea.in{height:auto;padding:10px 12px;min-height:76px;resize:vertical}
+.in:focus,.tbar input:focus,.hsearch input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:transparent}
+label.f{display:block;font-size:.84rem;font-weight:600;margin:12px 0 5px}
+label.f i{font-style:normal;color:var(--muted);font-weight:400}
+.toggle{display:flex;align-items:center;gap:6px;font-size:.86rem;color:var(--muted);white-space:nowrap}
+/* Product page */
+.crumb{font-size:.84rem;color:var(--muted);margin-bottom:12px}
+.crumb a:hover{color:var(--text)}
+.pd{display:grid;gap:24px}
+@media(min-width:900px){.pd{grid-template-columns:1.1fr 1fr;gap:40px;align-items:start}}
+.pd .gal{background:var(--surface);border-radius:24px;overflow:hidden;box-shadow:var(--shadow)}
+.pd .gal img{width:100%;aspect-ratio:1;object-fit:cover}
+.price{font-size:1.7rem;font-weight:700;letter-spacing:-.02em}
+.alt{font-size:.85rem;color:var(--muted)}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;background:var(--surface);height:44px}
+.qty button{width:42px;height:42px;border:0;background:none;font-size:1.2rem;cursor:pointer}
+.qty span{min-width:28px;text-align:center;font-weight:600}
+.info{list-style:none;padding:0;margin:18px 0;display:grid;gap:10px}
+.info li{display:flex;gap:10px;font-size:.9rem;align-items:flex-start}
+.info .ic{color:var(--gold);margin-top:2px}
+.specs{width:100%;border-collapse:collapse;font-size:.92rem;background:var(--surface);border-radius:var(--r2);overflow:hidden}
+.specs td{padding:10px 14px;border-bottom:1px solid var(--line)}
+.specs tr:last-child td{border:0}
+.specs td:first-child{color:var(--muted);width:40%}
+/* Boxes / cart / checkout */
+.box{background:var(--surface);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.line{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.line:last-child{border:0}
+.line img{width:72px;height:72px;border-radius:12px;object-fit:cover}
+.line .nm{font-weight:600;font-size:.92rem;line-height:1.3}
+.rm{border:0;background:none;color:var(--muted);cursor:pointer;padding:6px}
+.tot{display:flex;justify-content:space-between;padding:6px 0;font-size:.95rem}
+.tot.big{font-size:1.15rem;font-weight:700;border-top:1px solid var(--line);margin-top:6px;padding-top:12px}
+.co{display:grid;gap:14px}
+@media(min-width:900px){.co{grid-template-columns:1.5fr 1fr;align-items:start}.co-sum{position:sticky;top:76px}}
+.n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:999px;background:var(--ink);color:var(--ink-text);font-size:.8rem;margin-right:8px}
+.opts{display:grid;gap:10px}
+@media(min-width:600px){.opts.two{grid-template-columns:1fr 1fr}}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:var(--r2);padding:13px;cursor:pointer;background:var(--surface)}
+.opt input{margin-top:4px;accent-color:var(--gold);width:18px;height:18px;flex:none}
+.opt.on{border-color:var(--gold);background:var(--gold-soft)}
+.opt b{display:block;font-size:.95rem}
+.opt span{font-size:.82rem;color:var(--muted)}
+.note{border-radius:var(--r2);padding:12px 14px;font-size:.88rem;margin-top:12px;background:var(--surface2);border:1px dashed var(--line)}
+.note.gold{background:var(--gold-soft);border-color:transparent}
+.g2{display:grid;gap:0 12px}
+@media(min-width:600px){.g2{grid-template-columns:1fr 1fr}}
+/* Confirmation / tracking */
+.okc{width:64px;height:64px;border-radius:999px;background:var(--ok-soft);color:var(--ok);display:grid;place-items:center;margin:0 auto 10px}
+.code{font:700 1.3rem/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.06em;background:var(--surface2);padding:10px 16px;border-radius:12px;display:inline-block}
+.qr{width:180px;height:180px;margin:14px auto;background:#fff;padding:8px;border-radius:12px;image-rendering:pixelated}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{position:relative;padding:0 0 20px 34px;color:var(--muted)}
+.tl li:before{content:"";position:absolute;left:8px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--line)}
+.tl li:after{content:"";position:absolute;left:13px;top:20px;bottom:0;width:2px;background:var(--line)}
+.tl li:last-child:after{display:none}
+.tl li.done{color:var(--text)}
+.tl li.done:before{background:var(--ok)}
+.tl li.done:after{background:var(--ok)}
+.tl li.cur b{color:var(--ok)}
+.pill{display:inline-block;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--surface2)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.bad{background:var(--danger-soft);color:var(--danger)}
+/* Store */
+.store{display:grid;gap:14px}
+@media(min-width:900px){.store{grid-template-columns:1fr 1fr}}
+.hours{width:100%;border-collapse:collapse;font-size:.92rem}
+.hours td{padding:7px 0;border-bottom:1px solid var(--line)}
+.hours tr.today td{font-weight:700}
+.map{width:100%;aspect-ratio:4/3;border:0;border-radius:var(--r2);background:var(--surface2)}
+.mapph{width:100%;aspect-ratio:4/3;border-radius:var(--r2);background:var(--surface2);display:grid;place-items:center;border:1px dashed var(--line)}
+.open{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:.9rem}
+.open:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--danger)}
+.open.yes:before{background:var(--ok)}
+/* Skeleton / misc */
+.sk{background:linear-gradient(90deg,var(--surface2),var(--line),var(--surface2));background-size:200% 100%;animation:sk 1.2s infinite;border-radius:var(--r)}
+@keyframes sk{to{background-position:-200% 0}}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty .ic{color:var(--line);margin-bottom:10px}
+footer{border-top:1px solid var(--line);padding:28px 0 36px;font-size:.86rem;color:var(--muted)}
+footer .cols{display:grid;gap:18px}
+@media(min-width:800px){footer .cols{grid-template-columns:2fr 1fr 1fr}}
+footer b{color:var(--text)}
+footer a{display:block;padding:3px 0}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--ink-text);padding:11px 18px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:900px){#toast{bottom:28px}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#/" aria-label="Alou Cissé — accueil"><b>AC</b><span>Alou Cissé<small>Électronique & High-Tech</small></span></a>
+    <nav class="hnav" aria-label="Navigation principale">
+      <a href="#/catalogue" data-nav="catalogue">Catalogue</a>
+      <a href="#/boutique" data-nav="boutique">La boutique</a>
+      <a href="#/suivi" data-nav="suivi">Suivi</a>
+    </nav>
+    <form class="hsearch" id="hsearch" role="search">
+      <span id="hsIc"></span><label class="sr" for="hsq">Rechercher</label>
+      <input id="hsq" type="search" placeholder="Rechercher un produit, une marque…" autocomplete="off">
+    </form>
+    <div class="tools">
+      <label class="sr" for="cur">Devise</label>
+      <select id="cur" class="cur" aria-label="Devise">
+        <option value="XOF">FCFA</option><option value="EUR">€ EUR</option><option value="USD">$ USD</option>
+      </select>
+      <button class="ibtn" id="themeBtn" aria-label="Changer de thème"></button>
+      <a class="ibtn" href="#/panier" aria-label="Panier"><span id="cartIc"></span><span class="badge" data-n="0" id="badge1">0</span></a>
+    </div>
+  </div>
+</header>
+<div id="demoBar" class="demo" hidden>Mode démonstration — données locales, aucun paiement réel. Renseignez <code>config.js</code> pour passer en production.</div>
+<div id="offBar" class="offline" hidden>Vous êtes hors-ligne — le catalogue reste consultable, la commande nécessite une connexion.</div>
+
+<main id="app" class="wrap" tabindex="-1"></main>
+
+<footer>
+  <div class="wrap cols">
+    <div><b>Alou Cissé — Électronique & High-Tech</b><br><span id="fAddr"></span><br><span id="fOpen"></span><br><br>Produits neufs et garantis. Retrait en boutique, livraison dans tout Bamako et expédition internationale.</div>
+    <div><b>Boutique</b><a href="#/catalogue">Catalogue</a><a href="#/boutique">Horaires & plan</a><a href="#/suivi">Suivre une commande</a></div>
+    <div><b>Contact</b><a id="fTel" href="#"></a><a id="fWa" href="#" target="_blank" rel="noopener">WhatsApp</a><a id="fMail" href="#"></a></div>
+  </div>
+  <div class="wrap small" style="margin-top:18px">© <span id="yr"></span> Alou Cissé — Sébénikoro, Bamako, Mali</div>
+</footer>
+
+<nav class="bnav" aria-label="Navigation mobile">
+  <a href="#/" data-nav="home"><span data-ic="home"></span>Accueil</a>
+  <a href="#/catalogue" data-nav="catalogue"><span data-ic="grid"></span>Catalogue</a>
+  <a href="#/panier" data-nav="panier"><span data-ic="cart"></span>Panier<span class="badge" data-n="0" id="badge2">0</span></a>
+  <a href="#/suivi" data-nav="suivi"><span data-ic="box"></span>Suivi</a>
+</nav>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="demo-data.js"></script>
+<script>
+(function () {
+'use strict';
+
+/* ================= CONFIG & UTILITAIRES ================= */
+var C = window.AC_CONFIG || {};
+var STORE = C.store || {};
+var DEMO = !(C.firebase && C.firebase.projectId);
+var EUR_XOF = 655.957;          // parité fixe FCFA / euro
+var MAXQ = 10;                  // quantité max par article et par commande
+var FBV = '10.14.1';            // version du SDK Firebase compat
+
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+var LS = {
+  get: function (k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+function loadScript(src) {
+  return new Promise(function (res, rej) {
+    var s = document.createElement('script'); s.src = src; s.async = true;
+    s.onload = res; s.onerror = function () { rej(new Error('Chargement impossible : ' + src)); };
+    document.head.appendChild(s);
+  });
+}
+var toastT;
+function toast(msg) { var t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove('show'); }, 2800); }
+function digits(s) { return String(s || '').replace(/\D/g, ''); }
+function newCode() {
+  var a = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', out = '', r = new Uint32Array(8);
+  crypto.getRandomValues(r);
+  for (var i = 0; i < 8; i++) out += a[r[i] % a.length];
+  return 'AC-' + out;
+}
+function fmtDate(t) { try { return new Date(t).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Africa/Bamako' }); } catch (e) { return new Date(t).toLocaleString('fr-FR'); } }
+
+/* ================= ICÔNES ================= */
+var I = {
+  cart: '<path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+  home: '<path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/>',
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  truck: '<path d="M1 6h13v10H1zM14 10h4l3 3v3h-7z"/><circle cx="5.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/>',
+  store: '<path d="M3 9l1.5-5h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+  card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+  pin: '<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  phone: '<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/>',
+  chat: '<path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/>',
+  box: '<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  check: '<path d="m5 12 5 5 9-10"/>',
+  trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+  shield: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+  phoneM: '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>'
+};
+function ic(n, s) { s = s || 20; return '<svg class="ic" width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (I[n] || '') + '</svg>'; }
+
+/* ================= CATÉGORIES & VISUELS ================= */
+var CATS = [
+  { id: 'smartphones', name: 'Smartphones' }, { id: 'ordinateurs', name: 'Ordinateurs' },
+  { id: 'audio', name: 'Audio' }, { id: 'connectes', name: 'Objets connectés' },
+  { id: 'gadgets', name: 'Gadgets' }, { id: 'composants', name: 'Composants' }
+];
+function catName(id) { var c = CATS.filter(function (x) { return x.id === id; })[0]; return c ? c.name : id; }
+var pins = ''; for (var k = 0; k < 4; k++) { var y = 66 + k * 16; pins += '<path d="M50 ' + y + 'h15M135 ' + y + 'h15" stroke="#fff" stroke-width="5"/>'; }
+var GLYPH = {
+  smartphones: '<rect x="72" y="32" width="56" height="110" rx="12" fill="none" stroke="#fff" stroke-width="5"/><circle cx="100" cy="130" r="4" fill="#fff"/>',
+  ordinateurs: '<rect x="45" y="45" width="110" height="70" rx="6" fill="none" stroke="#fff" stroke-width="5"/><path d="M30 126h140l-10 10H40z" fill="#fff"/>',
+  audio: '<path d="M55 110v-20a45 45 0 0 1 90 0v20" fill="none" stroke="#fff" stroke-width="6"/><rect x="45" y="100" width="22" height="38" rx="8" fill="#fff"/><rect x="133" y="100" width="22" height="38" rx="8" fill="#fff"/>',
+  connectes: '<rect x="82" y="25" width="36" height="28" fill="#fff" opacity=".55"/><rect x="82" y="127" width="36" height="28" fill="#fff" opacity=".55"/><rect x="65" y="50" width="70" height="80" rx="18" fill="none" stroke="#fff" stroke-width="6"/><path d="M100 72v20l12 8" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>',
+  gadgets: '<rect x="55" y="55" width="90" height="70" rx="14" fill="none" stroke="#fff" stroke-width="6"/><path d="M104 70 88 94h18l-10 20" stroke="#fff" stroke-width="5" fill="none" stroke-linejoin="round"/>',
+  composants: '<rect x="65" y="55" width="70" height="70" rx="6" fill="none" stroke="#fff" stroke-width="6"/>' + pins
+};
+var GRAD = { smartphones: ['#1d1d1f', '#4a4a4f'], ordinateurs: ['#0b3d91', '#2f7be0'], audio: ['#4c1d95', '#8b5cf6'], connectes: ['#065f46', '#10b981'], gadgets: ['#7c2d12', '#e0a019'], composants: ['#134e4a', '#14b8a6'] };
+var phCache = {};
+function ph(cat) {
+  if (phCache[cat]) return phCache[cat];
+  var g = GRAD[cat] || GRAD.gadgets;
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + g[0] + '"/><stop offset="1" stop-color="' + g[1] + '"/></linearGradient></defs><rect width="200" height="180" fill="url(#g)"/>' + (GLYPH[cat] || '') + '</svg>';
+  return (phCache[cat] = 'data:image/svg+xml,' + encodeURIComponent(svg));
+}
+function img(p) { return p.thumb || ph(p.cat); }
+
+/* ================= ÉTAT ================= */
+var S = {
+  products: LS.get('ac_cache_products', []), loaded: false,
+  settings: Object.assign({}, C.defaults),
+  cur: LS.get('ac_cur', 'XOF'), usdAuto: 0,
+  view: '', pq: 1
+};
+var cart = LS.get('ac_cart', []);
+var co = Object.assign({ mode: 'delivery', zone: '', relay: '', intlZone: '', pay: '', name: '', phone: '', email: '', address: '', country: '', city: '', postal: '', note: '', payRef: '' }, LS.get('ac_co', {}));
+co.pay = ''; co.payRef = '';
+
+function byId(id) { for (var i = 0; i < S.products.length; i++) if (S.products[i].id === id) return S.products[i]; return null; }
+function usdRate() { return S.usdAuto || +S.settings.usdRate || 600; }
+function conv(xof, cur) { cur = cur || S.cur; return cur === 'EUR' ? xof / EUR_XOF : cur === 'USD' ? xof / usdRate() : xof; }
+function money(xof, cur) {
+  cur = cur || S.cur; var v = conv(xof, cur);
+  if (cur === 'XOF') return new Intl.NumberFormat('fr-FR').format(Math.round(v)) + '\u00a0FCFA';
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: cur }).format(v);
+}
+function fcfa(x) { return money(x, 'XOF'); }
+function stockInfo(p) {
+  var s = +p.stock || 0;
+  if (s <= 0) return { c: 'out', t: 'Rupture de stock' };
+  if (s <= 3) return { c: 'low', t: 'Plus que ' + s + ' en stock' };
+  return { c: 'ok', t: 'En stock' };
+}
+
+/* ================= COUCHE DONNÉES (démo ou Firebase) ================= */
+var db = null;
+var DB = {
+  init: function () {
+    if (DEMO) return Promise.resolve();
+    return loadScript('https://www.gstatic.com/firebasejs/' + FBV + '/firebase-app-compat.js')
+      .then(function () { return loadScript('https://www.gstatic.com/firebasejs/' + FBV + '/firebase-firestore-compat.js'); })
+      .then(function () {
+        firebase.initializeApp(C.firebase);
+        db = firebase.firestore();
+        return db.enablePersistence({ synchronizeTabs: true }).catch(function () {});
+      })
+      .catch(function (e) { console.warn(e); toast('Serveur injoignable — catalogue en cache'); });
+  },
+  demoProducts: function () {
+    var p = LS.get('ac_demo_products', null);
+    if (!p) { p = (window.AC_SEED || []).slice(); LS.set('ac_demo_products', p); }
+    return p.filter(function (x) { return x.active !== false; });
+  },
+  watchProducts: function (cb) {
+    if (DEMO) {
+      cb(DB.demoProducts());
+      window.addEventListener('storage', function (e) { if (e.key === 'ac_demo_products') cb(DB.demoProducts()); });
+      return;
+    }
+    if (!db) { cb(S.products); return; }
+    db.collection('products').where('active', '==', true).onSnapshot(function (s) {
+      cb(s.docs.map(function (d) { var o = d.data(); o.id = d.id; return o; }));
+    }, function (e) { console.warn(e); cb(S.products); });
+  },
+  watchSettings: function (cb) {
+    if (DEMO) { cb(LS.get('ac_demo_settings', {})); return; }
+    if (!db) return;
+    db.doc('settings/store').onSnapshot(function (d) { cb(d.exists ? d.data() : {}); }, function () {});
+  },
+  getImage: function (id) {
+    if (DEMO) return Promise.resolve(LS.get('ac_demo_img_' + id, null));
+    if (!db) return Promise.resolve(null);
+    return db.doc('productImages/' + id).get().then(function (d) { return d.exists ? d.data().full : null; }).catch(function () { return null; });
+  },
+  placeOrder: function (order) {
+    if (DEMO) {
+      var all = LS.get('ac_demo_products', []);
+      try {
+        order.items.forEach(function (it) {
+          var p = all.filter(function (x) { return x.id === it.id; })[0];
+          if (!p) throw new Error('Produit indisponible : ' + it.name);
+          if ((+p.stock || 0) < it.qty) throw new Error('Stock insuffisant : ' + it.name + ' (reste ' + (+p.stock || 0) + ')');
+        });
+      } catch (e) { return Promise.reject(e); }
+      order.items.forEach(function (it) { var p = all.filter(function (x) { return x.id === it.id; })[0]; p.stock = (+p.stock || 0) - it.qty; });
+      LS.set('ac_demo_products', all);
+      var orders = LS.get('ac_demo_orders', {}); orders[order.code] = order; LS.set('ac_demo_orders', orders);
+      S.products = DB.demoProducts();
+      return Promise.resolve();
+    }
+    if (!db) return Promise.reject(new Error('Serveur injoignable, réessayez.'));
+    var oref = db.collection('orders').doc(order.code);
+    return db.runTransaction(function (t) {
+      var refs = order.items.map(function (i) { return db.collection('products').doc(i.id); });
+      return Promise.all(refs.map(function (r) { return t.get(r); })).then(function (snaps) {
+        snaps.forEach(function (s, k) {
+          var it = order.items[k];
+          if (!s.exists || s.data().active === false) throw new Error('Produit indisponible : ' + it.name);
+          var st = +s.data().stock || 0;
+          if (st < it.qty) throw new Error('Stock insuffisant : ' + it.name + ' (reste ' + st + ')');
+          if (+s.data().price !== +it.price) throw new Error('Le prix de « ' + it.name + ' » a changé. Vérifiez votre panier.');
+        });
+        snaps.forEach(function (s, k) { t.update(refs[k], { stock: (+s.data().stock || 0) - order.items[k].qty }); });
+        var data = Object.assign({}, order, { ts: firebase.firestore.FieldValue.serverTimestamp() });
+        t.set(oref, data);
+      });
+    });
+  },
+  getOrder: function (code) {
+    if (DEMO) return Promise.resolve(LS.get('ac_demo_orders', {})[code] || null);
+    if (!db) return Promise.resolve(null);
+    return db.collection('orders').doc(code).get().then(function (d) { return d.exists ? d.data() : null; });
+  },
+  markPaid: function (code, pid) {
+    if (DEMO) { var o = LS.get('ac_demo_orders', {}); if (o[code]) { o[code].paymentStatus = 'paye'; o[code].paypalId = pid; LS.set('ac_demo_orders', o); } return Promise.resolve(); }
+    return db.collection('orders').doc(code).update({ paymentStatus: 'paye', paypalId: String(pid) });
+  }
+};
+
+/* ================= PANIER ================= */
+function saveCart() {
+  LS.set('ac_cart', cart);
+  var n = cart.reduce(function (a, b) { return a + b.qty; }, 0);
+  ['#badge1', '#badge2'].forEach(function (s) { var b = $(s); b.textContent = n; b.dataset.n = n; });
+}
+function cartLines() {
+  return cart.map(function (c) { return { p: byId(c.id), qty: c.qty }; }).filter(function (l) { return l.p; });
+}
+function subtotal() { return cartLines().reduce(function (a, l) { return a + l.p.price * l.qty; }, 0); }
+function addToCart(id, qty, silent) {
+  var p = byId(id); if (!p) return false;
+  var it = cart.filter(function (i) { return i.id === id; })[0];
+  var cur = it ? it.qty : 0, max = Math.min(+p.stock || 0, MAXQ);
+  if (!max) { toast('Produit en rupture de stock'); return false; }
+  var n = Math.min(cur + qty, max);
+  if (cur + qty > max) toast('Quantité maximale disponible : ' + max);
+  else if (!silent) toast('Ajouté au panier');
+  if (it) it.qty = n; else cart.push({ id: id, qty: n });
+  saveCart(); return true;
+}
+function setQty(id, q) {
+  var p = byId(id), it = cart.filter(function (i) { return i.id === id; })[0]; if (!it) return;
+  var max = Math.min(p ? +p.stock || 0 : 0, MAXQ);
+  if (q > max) { toast('Quantité maximale disponible : ' + max); q = max; }
+  if (q <= 0) cart = cart.filter(function (i) { return i.id !== id; }); else it.qty = q;
+  saveCart();
+}
+
+/* ================= HORAIRES ================= */
+var DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+function tmin(s) { var a = s.split(':'); return +a[0] * 60 + +a[1]; }
+function hh(s) { return s.replace(':', 'h'); }
+function openState() {
+  var now = new Date(), d = now.getUTCDay(), m = now.getUTCHours() * 60 + now.getUTCMinutes(); // Bamako = GMT
+  var slots = (STORE.hours || []).filter(function (h) { return h.d === d; });
+  for (var i = 0; i < slots.length; i++) {
+    if (m >= tmin(slots[i].open) && m < tmin(slots[i].close)) return { open: true, txt: 'Ouvert · ferme à ' + hh(slots[i].close) };
+    if (m < tmin(slots[i].open)) return { open: false, txt: 'Fermé · ouvre à ' + hh(slots[i].open) };
+  }
+  return { open: false, txt: 'Fermé pour aujourd’hui' };
+}
+function hoursTable() {
+  var today = new Date().getUTCDay(), rows = '';
+  [1, 2, 3, 4, 5, 6, 0].forEach(function (d) {
+    var s = (STORE.hours || []).filter(function (h) { return h.d === d; });
+    rows += '<tr class="' + (d === today ? 'today' : '') + '"><td>' + DAYS[d] + '</td><td style="text-align:right">' +
+      (s.length ? s.map(function (h) { return hh(h.open) + ' – ' + hh(h.close); }).join(' · ') : 'Fermé') + '</td></tr>';
+  });
+  return '<table class="hours">' + rows + '</table>';
+}
+function waLink(text) { return 'https://wa.me/' + digits(STORE.whatsapp) + (text ? '?text=' + encodeURIComponent(text) : ''); }
+function telLink() { return 'tel:' + String(STORE.phone || '').replace(/\s/g, ''); }
+
+/* ================= VUES ================= */
+function card(p) {
+  var si = stockInfo(p), promo = p.oldPrice > p.price;
+  return '<div class="pc"><a href="#/produit/' + encodeURIComponent(p.id) + '"><div class="pimg"><img src="' + esc(img(p)) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async" width="200" height="180">' +
+    (promo ? '<span class="tag">-' + Math.round(100 - p.price * 100 / p.oldPrice) + '%</span>' : '') + '</div></a>' +
+    '<div class="pb"><div class="brand">' + esc(p.brand) + '</div><a class="pn" href="#/produit/' + encodeURIComponent(p.id) + '">' + esc(p.name) + '</a>' +
+    '<div class="pp">' + money(p.price) + (promo ? '<s>' + money(p.oldPrice) + '</s>' : '') + '</div>' +
+    '<div class="pfoot"><span class="stk ' + si.c + '">' + si.t + '</span><button class="add" data-add="' + esc(p.id) + '" aria-label="Ajouter ' + esc(p.name) + ' au panier"' + (si.c === 'out' ? ' disabled' : '') + '>' + ic('plus', 18) + '</button></div></div></div>';
+}
+function skeletonGrid(n) { var h = ''; for (var i = 0; i < n; i++) h += '<div class="sk" style="aspect-ratio:3/4"></div>'; return '<div class="grid">' + h + '</div>'; }
+
+function vHome() {
+  var feat = S.products.filter(function (p) { return p.featured; }).slice(0, 8);
+  if (feat.length < 4) feat = S.products.slice(0, 8);
+  var os = openState();
+  return '<section class="hero"><div class="kicker">Sébénikoro · Bamako · International</div>' +
+    '<h1>La tech haut de gamme, près de chez vous.</h1>' +
+    '<p>Smartphones, ordinateurs, audio et objets connectés neufs et garantis. Retirez en boutique, faites-vous livrer dans Bamako ou expédier partout dans le monde.</p>' +
+    '<div class="row"><a class="btn gold" href="#/catalogue">Voir le catalogue</a><a class="btn ghost" href="#/boutique">' + ic('store', 18) + 'Click & Collect</a></div></section>' +
+    '<div class="perks">' +
+    '<div class="perk">' + ic('truck') + '<div><b>Livraison Bamako</b>Sébénikoro, Hamdallaye, ACI 2000…</div></div>' +
+    '<div class="perk">' + ic('store') + '<div><b>Retrait en boutique</b>Réservez en ligne, payez sur place</div></div>' +
+    '<div class="perk">' + ic('phoneM') + '<div><b>Mobile Money</b>Orange Money, Moov Money, espèces</div></div>' +
+    '<div class="perk">' + ic('globe') + '<div><b>International</b>Carte bancaire & PayPal</div></div></div>' +
+    '<div class="sec"><h2>Catégories</h2><a href="#/catalogue">Tout voir</a></div>' +
+    '<div class="cats">' + CATS.map(function (c) { return '<a class="cat" href="#/catalogue?cat=' + c.id + '"><img src="' + ph(c.id) + '" alt="" width="100" height="90">' + c.name + '</a>'; }).join('') + '</div>' +
+    '<div class="sec"><h2>Sélection du moment</h2><a href="#/catalogue">Catalogue complet</a></div>' +
+    (S.products.length ? '<div class="grid">' + feat.map(card).join('') + '</div>' : skeletonGrid(4)) +
+    '<div class="sec"><h2>Notre boutique</h2></div>' +
+    '<div class="box"><div class="row" style="justify-content:space-between"><div><b>' + esc(STORE.address) + '</b><br><span class="open ' + (os.open ? 'yes' : '') + '">' + os.txt + '</span></div>' +
+    '<div class="row"><a class="btn sm ghost" href="#/boutique">' + ic('pin', 18) + 'Plan & horaires</a><a class="btn sm wa" href="' + waLink('Bonjour Alou Cissé, ') + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'WhatsApp</a></div></div></div>';
+}
+
+function vCatalog(q) {
+  var cat = q.get('cat') || '', s = q.get('q') || '', sort = q.get('tri') || '', stock = q.get('stock') === '1';
+  return '<h1>Catalogue</h1>' +
+    '<div class="filters" id="cats"><button class="chip ' + (!cat ? 'on' : '') + '" data-cat="">Tout</button>' +
+    CATS.map(function (c) { return '<button class="chip ' + (cat === c.id ? 'on' : '') + '" data-cat="' + c.id + '">' + c.name + '</button>'; }).join('') + '</div>' +
+    '<div class="tbar"><label class="sr" for="cq">Rechercher</label><input id="cq" type="search" placeholder="Rechercher…" value="' + esc(s) + '">' +
+    '<label class="sr" for="csort">Trier</label><select id="csort"><option value="">Pertinence</option><option value="asc"' + (sort === 'asc' ? ' selected' : '') + '>Prix croissant</option><option value="desc"' + (sort === 'desc' ? ' selected' : '') + '>Prix décroissant</option><option value="promo"' + (sort === 'promo' ? ' selected' : '') + '>Promotions</option></select>' +
+    '<label class="toggle"><input type="checkbox" id="cstock"' + (stock ? ' checked' : '') + '> En stock</label></div>' +
+    '<p class="small muted" id="ccount"></p><div id="cgrid"></div>';
+}
+function catalogState() {
+  return { cat: ($('.chip.on', $('#cats')) || {}).dataset ? $('.chip.on', $('#cats')).dataset.cat : '', q: $('#cq').value.trim(), tri: $('#csort').value, stock: $('#cstock').checked };
+}
+function renderGrid() {
+  var g = $('#cgrid'); if (!g) return;
+  if (!S.products.length) { g.innerHTML = S.loaded ? '<div class="empty">' + ic('box', 48) + '<p>Aucun produit pour le moment.</p></div>' : skeletonGrid(8); return; }
+  var st = catalogState(), words = st.q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/\s+/).filter(Boolean);
+  var list = S.products.filter(function (p) {
+    if (st.cat && p.cat !== st.cat) return false;
+    if (st.stock && !(+p.stock > 0)) return false;
+    if (!words.length) return true;
+    var hay = (p.name + ' ' + p.brand + ' ' + catName(p.cat) + ' ' + (p.desc || '')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return words.every(function (w) { return hay.indexOf(w) >= 0; });
+  });
+  if (st.tri === 'asc') list.sort(function (a, b) { return a.price - b.price; });
+  else if (st.tri === 'desc') list.sort(function (a, b) { return b.price - a.price; });
+  else if (st.tri === 'promo') list = list.filter(function (p) { return p.oldPrice > p.price; });
+  else list.sort(function (a, b) { return ((+b.stock > 0) - (+a.stock > 0)) || ((b.featured ? 1 : 0) - (a.featured ? 1 : 0)); });
+  $('#ccount').textContent = list.length + ' produit' + (list.length > 1 ? 's' : '');
+  g.innerHTML = list.length ? '<div class="grid">' + list.map(card).join('') + '</div>' :
+    '<div class="empty">' + ic('search', 48) + '<p>Aucun résultat. Essayez un autre mot-clé.</p></div>';
+  var p = new URLSearchParams(); if (st.cat) p.set('cat', st.cat); if (st.q) p.set('q', st.q); if (st.tri) p.set('tri', st.tri); if (st.stock) p.set('stock', '1');
+  var h = '#/catalogue' + (p.toString() ? '?' + p : '');
+  if (location.hash !== h) history.replaceState(null, '', h);
+}
+function bindCatalog() {
+  $('#cats').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-cat]'); if (!b) return;
+    $$('.chip', this).forEach(function (c) { c.classList.toggle('on', c === b); }); renderGrid();
+  });
+  var t; $('#cq').addEventListener('input', function () { clearTimeout(t); t = setTimeout(renderGrid, 200); });
+  $('#csort').addEventListener('change', renderGrid);
+  $('#cstock').addEventListener('change', renderGrid);
+  renderGrid();
+}
+
+function vProduct(id) {
+  var p = byId(id);
+  if (!p) return S.loaded ? '<div class="empty">' + ic('box', 48) + '<p>Ce produit n’existe pas ou n’est plus disponible.</p><a class="btn" href="#/catalogue">Retour au catalogue</a></div>' : '<div class="sk" style="height:420px"></div>';
+  var si = stockInfo(p), max = Math.min(+p.stock || 0, MAXQ), promo = p.oldPrice > p.price;
+  if (S.pq > max) S.pq = Math.max(1, max);
+  var specs = p.specs && Object.keys(p.specs).length ? '<h2 style="margin-top:28px">Caractéristiques</h2><table class="specs">' +
+    Object.keys(p.specs).map(function (k) { return '<tr><td>' + esc(k) + '</td><td>' + esc(p.specs[k]) + '</td></tr>'; }).join('') + '</table>' : '';
+  var rel = S.products.filter(function (x) { return x.cat === p.cat && x.id !== p.id; }).slice(0, 4);
+  return '<div class="crumb"><a href="#/catalogue">Catalogue</a> › <a href="#/catalogue?cat=' + esc(p.cat) + '">' + esc(catName(p.cat)) + '</a></div>' +
+    '<div class="pd"><div class="gal"><img id="pdimg" src="' + esc(img(p)) + '" alt="' + esc(p.name) + '" width="600" height="600"></div><div>' +
+    '<div class="brand">' + esc(p.brand) + '</div><h1>' + esc(p.name) + '</h1>' +
+    '<div class="price">' + money(p.price) + (promo ? '<s>' + money(p.oldPrice) + '</s>' : '') + '</div>' +
+    (S.cur !== 'XOF' ? '<div class="alt">Prix de référence : ' + fcfa(p.price) + '</div>' : '') +
+    '<p class="stk ' + si.c + '" style="margin:10px 0 16px">' + si.t + '</p>' +
+    (max ? '<div class="row" style="margin-bottom:12px"><div class="qty" aria-label="Quantité"><button data-pq="-1" aria-label="Moins">−</button><span id="pqv">' + S.pq + '</span><button data-pq="1" aria-label="Plus">+</button></div>' +
+      '<button class="btn" style="flex:1" data-addq="' + esc(p.id) + '">' + ic('cart', 18) + 'Ajouter au panier</button></div>' +
+      '<button class="btn ghost block" data-collect="' + esc(p.id) + '">' + ic('store', 18) + 'Réserver & retirer à Sébénikoro</button>'
+      : '<a class="btn wa block" href="' + waLink('Bonjour, le produit « ' + p.name + ' » sera-t-il bientôt disponible ?') + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'Me prévenir du retour en stock</a>') +
+    '<ul class="info"><li>' + ic('store') + '<span><b>Click & Collect gratuit</b> — réservé ' + (STORE.reservationHours || 48) + ' h, payez au retrait (espèces, Orange/Moov Money).</span></li>' +
+    '<li>' + ic('truck') + '<span><b>Livraison à Bamako</b> — dès ' + fcfa(Math.min.apply(null, (S.settings.zones || [{ fee: 0 }]).map(function (z) { return z.fee; }))) + (S.settings.freeFrom ? ', offerte dès ' + fcfa(S.settings.freeFrom) : '') + '.</span></li>' +
+    '<li>' + ic('globe') + '<span><b>Expédition internationale</b> — payez par carte ou PayPal, numéro de suivi fourni.</span></li>' +
+    '<li>' + ic('shield') + '<span><b>Produit neuf et garanti</b>, facture remise.</span></li></ul>' +
+    (p.desc ? '<p>' + esc(p.desc) + '</p>' : '') + specs + '</div></div>' +
+    (rel.length ? '<div class="sec"><h2>Dans la même catégorie</h2></div><div class="grid">' + rel.map(card).join('') + '</div>' : '');
+}
+
+function vCart() {
+  var lines = cartLines();
+  if (!lines.length) return '<h1>Panier</h1><div class="empty">' + ic('cart', 48) + '<p>Votre panier est vide.</p><a class="btn" href="#/catalogue">Découvrir le catalogue</a></div>';
+  var sub = subtotal();
+  return '<h1>Panier</h1><div class="co"><div class="box">' + lines.map(function (l) {
+    return '<div class="line"><a href="#/produit/' + encodeURIComponent(l.p.id) + '"><img src="' + esc(img(l.p)) + '" alt="" loading="lazy"></a><div><div class="nm">' + esc(l.p.name) + '</div>' +
+      '<div class="small muted">' + money(l.p.price) + '</div><div class="row" style="margin-top:6px"><div class="qty" style="height:36px"><button data-cq="' + esc(l.p.id) + '" data-d="-1" aria-label="Moins">−</button><span>' + l.qty + '</span><button data-cq="' + esc(l.p.id) + '" data-d="1" aria-label="Plus">+</button></div>' +
+      '<button class="rm" data-rm="' + esc(l.p.id) + '" aria-label="Retirer">' + ic('trash', 18) + '</button></div></div><b>' + money(l.p.price * l.qty) + '</b></div>';
+  }).join('') + '</div><aside class="box co-sum"><div class="tot"><span>Sous-total</span><b>' + money(sub) + '</b></div>' +
+    '<div class="tot"><span>Livraison</span><span class="muted">calculée à l’étape suivante</span></div>' +
+    '<div class="tot big"><span>Total estimé</span><span>' + money(sub) + '</span></div>' +
+    (S.cur !== 'XOF' ? '<p class="alt">Soit ' + fcfa(sub) + '</p>' : '') +
+    '<a class="btn gold block" href="#/commande" style="margin-top:12px">Passer la commande</a>' +
+    '<p class="small muted center" style="margin:10px 0 0">Retrait en boutique gratuit · Orange Money · Moov Money · Carte · PayPal</p></aside></div>';
+}
+
+/* ---------- Tunnel de commande ---------- */
+var MODES = {
+  delivery: { t: 'Livraison à domicile — Bamako', s: 'Livré par nos coursiers dans votre quartier', i: 'truck' },
+  collect: { t: 'Retrait en boutique (Click & Collect)', s: 'Sébénikoro · gratuit · réservé ' + (STORE.reservationHours || 48) + ' h', i: 'store' },
+  relay: { t: 'Point relais — Bamako', s: 'Retirez près de chez vous', i: 'pin' },
+  intl: { t: 'Expédition internationale', s: 'Carte bancaire ou PayPal · suivi transporteur', i: 'globe' }
+};
+var PAYS = {
+  cash: { t: 'Espèces', s: function () { return co.mode === 'collect' ? 'Payez au retrait en boutique' : 'Payez à la livraison'; } },
+  om: { t: 'Orange Money', s: function () { return 'Paiement marchand au ' + STORE.orangeMoney; } },
+  moov: { t: 'Moov Money', s: function () { return 'Paiement marchand au ' + STORE.moovMoney; } },
+  card: { t: 'Carte Visa / Mastercard', s: function () { return 'Paiement sécurisé via PayPal, sans compte'; } },
+  paypal: { t: 'PayPal', s: function () { return 'Payez avec votre compte PayPal'; } }
+};
+function paysFor(m) { return m === 'intl' ? ['card', 'paypal'] : m === 'relay' ? ['om', 'moov', 'card', 'paypal'] : ['cash', 'om', 'moov', 'card', 'paypal']; }
+function shipping(sub) {
+  var s = S.settings, f = null;
+  if (co.mode === 'collect') return 0;
+  if (co.mode === 'delivery') { f = (s.zones || []).filter(function (z) { return z.name === co.zone; })[0]; if (f && s.freeFrom && sub >= s.freeFrom) return 0; }
+  if (co.mode === 'relay') f = (s.relays || []).filter(function (z) { return z.name === co.relay; })[0];
+  if (co.mode === 'intl') f = (s.intlZones || []).filter(function (z) { return z.name === co.intlZone; })[0];
+  return f ? +f.fee : null;
+}
+function opt(name, val, cur, title, sub, icon) {
+  return '<label class="opt ' + (val === cur ? 'on' : '') + '"><input type="radio" name="' + name + '" value="' + val + '"' + (val === cur ? ' checked' : '') + '>' +
+    '<div>' + (icon ? '<b>' + title + '</b>' : '<b>' + title + '</b>') + '<span>' + sub + '</span></div></label>';
+}
+function selectOf(key, list, label) {
+  return '<label class="f" for="f_' + key + '">' + label + '</label><select class="in" id="f_' + key + '" data-k="' + key + '"><option value="">Choisir…</option>' +
+    list.map(function (z) { return '<option' + (co[key] === z.name ? ' selected' : '') + ' value="' + esc(z.name) + '">' + esc(z.name) + ' — ' + (z.fee ? fcfa(z.fee) : 'gratuit') + '</option>'; }).join('') + '</select>';
+}
+function field(key, label, type, ph, extra) {
+  return '<label class="f" for="f_' + key + '">' + label + '</label><input class="in" id="f_' + key + '" data-k="' + key + '" type="' + (type || 'text') + '" value="' + esc(co[key]) + '" placeholder="' + esc(ph || '') + '"' + (extra || '') + '>';
+}
+function modeFields() {
+  var s = S.settings;
+  if (co.mode === 'delivery') return selectOf('zone', s.zones || [], 'Quartier') + field('address', 'Adresse / repères', 'text', 'Ex. rue, porte, à côté de la mosquée…', ' autocomplete="street-address"') +
+    (s.freeFrom ? '<p class="small muted">Livraison offerte dès ' + fcfa(s.freeFrom) + ' d’achat.</p>' : '');
+  if (co.mode === 'relay') return selectOf('relay', s.relays || [], 'Point relais');
+  if (co.mode === 'collect') return '<div class="note gold"><b>' + esc(STORE.address) + '</b><br>' + openState().txt + '. Votre commande est mise de côté ' + (STORE.reservationHours || 48) + ' h. Présentez le QR code reçu au retrait. <a href="#/boutique"><u>Plan & horaires</u></a></div>';
+  return selectOf('intlZone', s.intlZones || [], 'Zone de destination') +
+    '<div class="g2"><div>' + field('country', 'Pays', 'text', 'Ex. France', ' autocomplete="country-name"') + '</div><div>' + field('city', 'Ville', 'text', '', ' autocomplete="address-level2"') + '</div></div>' +
+    '<div class="g2"><div>' + field('address', 'Adresse complète', 'text', '', ' autocomplete="street-address"') + '</div><div>' + field('postal', 'Code postal', 'text', '', ' autocomplete="postal-code"') + '</div></div>' +
+    '<p class="small muted">Tarif d’expédition forfaitaire pour un colis standard. Les éventuels droits de douane du pays de destination restent à la charge du destinataire.</p>';
+}
+function payNote() {
+  if (co.pay === 'om' || co.pay === 'moov') {
+    var num = co.pay === 'om' ? STORE.orangeMoney : STORE.moovMoney, nm = co.pay === 'om' ? 'Orange Money' : 'Moov Money';
+    return '<div class="note gold">Depuis votre menu ' + nm + ', effectuez un <b>paiement marchand de ' + fcfa(totalNow() || 0) + '</b> au <b>' + esc(num) + '</b>, puis indiquez la référence de la transaction ci-dessous. ' +
+      'Vous pouvez aussi la saisir plus tard sur WhatsApp. ' + (co.mode !== 'relay' ? 'Si vous préférez, payez par ' + nm + ' ' + (co.mode === 'collect' ? 'au retrait.' : 'à la livraison.') : '') + '</div>' +
+      field('payRef', 'Référence de transaction <i>(facultatif)</i>', 'text', 'Ex. CI240611.1234.A12345');
+  }
+  if (co.pay === 'card' || co.pay === 'paypal') return '<div class="note">Montant débité en euros : <b>' + money(totalNow() || 0, 'EUR') + '</b>. Après validation, le paiement sécurisé PayPal s’ouvre' + (co.pay === 'card' ? ' (aucun compte PayPal nécessaire).' : '.') + '</div>';
+  if (co.pay === 'cash') return '<div class="note">Prévoyez l’appoint si possible. ' + (co.mode === 'collect' ? 'Paiement au comptoir de la boutique.' : 'Notre livreur vous appelle avant de passer.') + '</div>';
+  return '';
+}
+function totalNow() { var sub = subtotal(), sh = shipping(sub); return sh == null ? null : sub + sh; }
+function sumHTML() {
+  var sub = subtotal(), sh = shipping(sub), lines = cartLines();
+  return '<h2>Récapitulatif</h2>' + lines.map(function (l) { return '<div class="tot small"><span>' + l.qty + ' × ' + esc(l.p.name) + '</span><span>' + money(l.p.price * l.qty) + '</span></div>'; }).join('') +
+    '<div class="tot" style="border-top:1px solid var(--line);margin-top:8px;padding-top:10px"><span>Sous-total</span><span>' + money(sub) + '</span></div>' +
+    '<div class="tot"><span>' + (co.mode === 'collect' ? 'Retrait en boutique' : 'Livraison') + '</span><span>' + (sh == null ? '<span class="muted">à choisir</span>' : sh === 0 ? 'Gratuit' : money(sh)) + '</span></div>' +
+    '<div class="tot big"><span>Total</span><span>' + money(sub + (sh || 0)) + '</span></div>' +
+    (S.cur !== 'XOF' ? '<p class="alt">Montant facturé : ' + fcfa(sub + (sh || 0)) + '</p>' : '') +
+    '<button class="btn gold block" id="placeBtn" style="margin-top:12px">' + ic('check', 18) + (co.mode === 'collect' ? 'Réserver ma commande' : 'Valider la commande') + '</button>' +
+    '<p class="small muted center" style="margin:10px 0 0">' + ic('shield', 16) + ' Vos données ne servent qu’au traitement de la commande.</p>';
+}
+function vCheckout() {
+  if (!cartLines().length) return vCart();
+  if (paysFor(co.mode).indexOf(co.pay) < 0) co.pay = '';
+  return '<h1>Finaliser la commande</h1><div class="co"><div>' +
+    '<section class="box"><h2><span class="n">1</span>Mode de réception</h2><div class="opts two" id="modes">' +
+    Object.keys(MODES).map(function (m) { return opt('mode', m, co.mode, MODES[m].t, MODES[m].s, MODES[m].i); }).join('') + '</div>' +
+    '<div id="modeF">' + modeFields() + '</div></section>' +
+    '<section class="box"><h2><span class="n">2</span>Vos coordonnées</h2>' + field('name', 'Nom complet', 'text', '', ' autocomplete="name"') +
+    '<div class="g2"><div>' + field('phone', 'Téléphone' + (co.mode === 'intl' ? '' : ' (Mali)'), 'tel', co.mode === 'intl' ? '+33 6 12 34 56 78' : '+223 70 00 00 00', ' autocomplete="tel" inputmode="tel"') + '</div><div>' +
+    field('email', 'E-mail' + (co.mode === 'intl' ? '' : ' <i>(facultatif)</i>'), 'email', 'vous@exemple.com', ' autocomplete="email"') + '</div></div>' +
+    '<label class="f" for="f_note">Instructions <i>(facultatif)</i></label><textarea class="in" id="f_note" data-k="note" rows="2">' + esc(co.note) + '</textarea></section>' +
+    '<section class="box"><h2><span class="n">3</span>Paiement</h2><div class="opts" id="pays">' +
+    paysFor(co.mode).map(function (k) { return opt('pay', k, co.pay, PAYS[k].t, PAYS[k].s()); }).join('') + '</div><div id="payN">' + payNote() + '</div></section>' +
+    '</div><aside class="box co-sum" id="cosum">' + sumHTML() + '</aside></div>';
+}
+function saveCo() { var c = Object.assign({}, co); delete c.pay; delete c.payRef; LS.set('ac_co', c); }
+function bindCheckout() {
+  var root = $('#app');
+  root.addEventListener('input', onCoInput);
+  root.addEventListener('change', onCoInput);
+  function onCoInput(e) {
+    if (S.view !== 'commande') return;
+    var el = e.target;
+    if (el.name === 'mode' && e.type === 'change') { co.mode = el.value; saveCo(); route(true); return; }
+    if (el.name === 'pay' && e.type === 'change') {
+      co.pay = el.value;
+      $$('#pays .opt').forEach(function (o) { o.classList.toggle('on', $('input', o).checked); });
+      $('#payN').innerHTML = payNote(); return;
+    }
+    var k = el.dataset && el.dataset.k; if (!k) return;
+    co[k] = el.value; saveCo();
+    if (k === 'zone' || k === 'relay' || k === 'intlZone') { $('#cosum').innerHTML = sumHTML(); if (co.pay === 'om' || co.pay === 'moov' || co.pay === 'card' || co.pay === 'paypal') $('#payN').innerHTML = payNote(); }
+  }
+  bindCheckout = function () {}; // une seule liaison (délégation)
+}
+function validate() {
+  if (!co.name.trim() || co.name.trim().length < 3) return 'Indiquez votre nom complet';
+  var d = digits(co.phone);
+  if (co.mode === 'intl') { if (d.length < 8) return 'Numéro de téléphone invalide'; }
+  else { if (d.indexOf('223') === 0 && d.length === 11) d = d.slice(3); if (d.length !== 8) return 'Numéro malien attendu (8 chiffres)'; }
+  if (co.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(co.email)) return 'Adresse e-mail invalide';
+  if (co.mode === 'delivery' && (!co.zone || co.address.trim().length < 4)) return 'Choisissez le quartier et indiquez l’adresse';
+  if (co.mode === 'relay' && !co.relay) return 'Choisissez un point relais';
+  if (co.mode === 'intl') {
+    if (!co.intlZone) return 'Choisissez la zone de destination';
+    if (!co.country.trim() || !co.city.trim() || co.address.trim().length < 5) return 'Adresse d’expédition incomplète';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(co.email)) return 'E-mail requis pour une expédition internationale';
+  }
+  if (!co.pay) return 'Choisissez un moyen de paiement';
+  for (var i = 0; i < cart.length; i++) {
+    var p = byId(cart[i].id);
+    if (!p || (+p.stock || 0) < cart[i].qty) return 'Stock insuffisant pour « ' + (p ? p.name : 'un article') + ' ». Ajustez votre panier.';
+  }
+  return '';
+}
+function placeOrder(btn) {
+  var err = validate(); if (err) { toast(err); return; }
+  if (!DEMO && !navigator.onLine) { toast('Connexion internet requise pour valider la commande'); return; }
+  var lines = cartLines(), sub = subtotal(), sh = shipping(sub), now = Date.now(), total = sub + sh;
+  var online = co.pay === 'card' || co.pay === 'paypal';
+  var order = {
+    code: newCode(), createdAt: now, status: 'recue', history: [{ s: 'recue', at: now }],
+    items: lines.map(function (l) { return { id: l.p.id, name: l.p.name, price: l.p.price, qty: l.qty }; }),
+    subtotal: sub, shipping: sh, total: total, currency: S.cur, displayTotal: Math.round(conv(total) * 100) / 100,
+    customer: { name: co.name.trim(), phone: co.phone.trim(), email: co.email.trim() },
+    delivery: {
+      mode: co.mode, zone: co.mode === 'delivery' ? co.zone : co.mode === 'relay' ? co.relay : co.mode === 'intl' ? co.intlZone : 'Boutique Sébénikoro',
+      address: co.mode === 'delivery' || co.mode === 'intl' ? co.address.trim() : '', city: co.mode === 'intl' ? co.city.trim() : 'Bamako',
+      country: co.mode === 'intl' ? co.country.trim() : 'Mali', postal: co.mode === 'intl' ? co.postal.trim() : ''
+    },
+    note: co.note.trim(),
+    payment: { method: co.pay, ref: (co.payRef || '').trim() },
+    paymentStatus: online ? 'en_attente_paypal' : (co.payRef ? 'a_verifier' : 'non_paye'),
+    tracking: { carrier: '', number: '' }
+  };
+  btn.disabled = true; btn.textContent = 'Envoi en cours…';
+  DB.placeOrder(order).then(function () {
+    cart = []; saveCart();
+    var mine = LS.get('ac_my_orders', []); mine.unshift(order.code); LS.set('ac_my_orders', mine.slice(0, 10));
+    location.hash = '#/confirmation/' + order.code;
+  }).catch(function (e) {
+    console.warn(e); toast(e && e.message ? e.message : 'La commande a échoué, réessayez.');
+    btn.disabled = false; btn.innerHTML = 'Réessayer';
+  });
+}
+
+/* ---------- Confirmation & suivi ---------- */
+var ST = { recue: 'Commande reçue', confirmee: 'Confirmée', preparation: 'En préparation', prete: 'Prête au retrait', expediee: 'En livraison', livree: 'Livrée', retiree: 'Retirée en boutique', annulee: 'Annulée' };
+var FLOW = { collect: ['recue', 'confirmee', 'preparation', 'prete', 'retiree'], delivery: ['recue', 'confirmee', 'preparation', 'expediee', 'livree'], relay: ['recue', 'confirmee', 'preparation', 'expediee', 'livree'], intl: ['recue', 'confirmee', 'preparation', 'expediee', 'livree'] };
+var PST = { paye: ['ok', 'Payé'], a_verifier: ['warn', 'Paiement à vérifier'], non_paye: ['', 'À payer ' + 'à la remise'], en_attente_paypal: ['warn', 'Paiement en attente'], rembourse: ['bad', 'Remboursé'] };
+function stLabel(s, mode) { if (s === 'expediee' && mode === 'intl') return 'Expédiée'; if (s === 'livree' && mode === 'relay') return 'Disponible au point relais'; return ST[s] || s; }
+function trackUrl(code) { return location.origin + location.pathname + '#/suivi/' + code; }
+function payPill(o) { var p = PST[o.paymentStatus] || ['', o.paymentStatus]; return '<span class="pill ' + p[0] + '">' + p[1] + '</span>'; }
+function orderSummary(o) {
+  return o.items.map(function (i) { return '<div class="tot small"><span>' + i.qty + ' × ' + esc(i.name) + '</span><span>' + fcfa(i.price * i.qty) + '</span></div>'; }).join('') +
+    '<div class="tot small"><span>' + (o.delivery.mode === 'collect' ? 'Retrait boutique' : 'Livraison') + '</span><span>' + (o.shipping ? fcfa(o.shipping) : 'Gratuit') + '</span></div>' +
+    '<div class="tot big"><span>Total</span><span>' + fcfa(o.total) + '</span></div>';
+}
+function loadingView() { $('#app').innerHTML = '<div class="sk" style="height:360px;max-width:620px;margin:0 auto"></div>'; }
+function vConfirm(code) {
+  loadingView();
+  DB.getOrder(code).then(function (o) {
+    if (S.view !== 'confirmation') return;
+    if (!o) { $('#app').innerHTML = '<div class="empty"><p>Commande introuvable.</p><a class="btn" href="#/suivi">Suivre une commande</a></div>'; return; }
+    var m = o.delivery.mode, pay = o.payment.method, next = '';
+    if (o.paymentStatus === 'en_attente_paypal') next = '<div class="box"><h2>Finaliser le paiement</h2><p class="small muted">Montant : <b>' + money(o.total, 'EUR') + '</b> (' + fcfa(o.total) + '). Votre commande est réservée en attendant le paiement.</p><div id="ppbox"><div class="sk" style="height:50px"></div></div></div>';
+    else if ((pay === 'om' || pay === 'moov') && o.paymentStatus !== 'paye') next = '<div class="note gold">Paiement ' + (pay === 'om' ? 'Orange Money' : 'Moov Money') + ' : envoyez <b>' + fcfa(o.total) + '</b> au <b>' + esc(pay === 'om' ? STORE.orangeMoney : STORE.moovMoney) + '</b> en indiquant <b>' + esc(o.code) + '</b>. ' + (o.payment.ref ? 'Référence reçue, nous la vérifions.' : 'Envoyez-nous ensuite la référence par WhatsApp.') + '</div>';
+    var what = m === 'collect' ? 'Votre commande est réservée ' + (STORE.reservationHours || 48) + ' h à la boutique de Sébénikoro. Présentez ce QR code au comptoir.' :
+      m === 'intl' ? 'Nous préparons votre colis. Le numéro de suivi du transporteur apparaîtra sur la page de suivi.' :
+      'Nous vous appelons pour confirmer, puis notre coursier vous livre.';
+    var waTxt = 'Bonjour Alou Cissé, voici ma commande ' + o.code + ' (' + fcfa(o.total) + ').' + (o.payment.ref ? ' Réf. paiement : ' + o.payment.ref : '') + ' Suivi : ' + trackUrl(o.code);
+    $('#app').innerHTML = '<div style="max-width:620px;margin:0 auto"><div class="box center"><div class="okc">' + ic('check', 32) + '</div>' +
+      '<h1 style="font-size:1.6rem">Merci ' + esc(o.customer.name.split(' ')[0]) + ' !</h1><p class="muted">' + what + '</p>' +
+      '<div class="code" id="ccode">' + esc(o.code) + '</div><div id="qr"></div><div>' + payPill(o) + '</div>' +
+      '<div class="row" style="justify-content:center;margin-top:14px"><a class="btn wa" href="' + waLink(waTxt) + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'Envoyer sur WhatsApp</a>' +
+      '<a class="btn ghost" href="#/suivi/' + encodeURIComponent(o.code) + '">' + ic('box', 18) + 'Suivre</a></div></div>' + next +
+      '<div class="box"><h2>Détail</h2>' + orderSummary(o) + '</div><p class="center"><a class="btn ghost" href="#/catalogue">Continuer mes achats</a></p></div>';
+    renderQR(o.code);
+    if (o.paymentStatus === 'en_attente_paypal') mountPayPal(o);
+  }).catch(function () { $('#app').innerHTML = '<div class="empty"><p>Impossible de charger la commande. Vérifiez votre connexion.</p></div>'; });
+}
+function renderQR(code) {
+  var box = $('#qr'); if (!box) return;
+  (window.qrcode ? Promise.resolve() : loadScript('https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js')).then(function () {
+    var q = window.qrcode(0, 'M'); q.addData(trackUrl(code)); q.make();
+    box.innerHTML = '<img class="qr" alt="QR code de suivi ' + esc(code) + '" src="' + q.createDataURL(6, 2) + '">';
+  }).catch(function () { box.innerHTML = '<p class="small muted">QR code indisponible hors-ligne — notez votre code.</p>'; });
+}
+function mountPayPal(o) {
+  var box = $('#ppbox'); if (!box) return;
+  var eur = (o.total / EUR_XOF).toFixed(2), done = function (id) { return DB.markPaid(o.code, id).then(function () { toast('Paiement reçu, merci !'); route(true); }); };
+  if (!C.paypalClientId) {
+    box.innerHTML = '<p class="small muted">Mode démo : PayPal n’est pas configuré dans <code>config.js</code>.</p><button class="btn block" id="ppsim">Simuler un paiement réussi (' + eur + ' €)</button>';
+    $('#ppsim').onclick = function () { this.disabled = true; done('SIMULATION'); }; return;
+  }
+  (window.paypal ? Promise.resolve() : loadScript('https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(C.paypalClientId) + '&currency=EUR&intent=capture&enable-funding=card'))
+    .then(function () {
+      box.innerHTML = '';
+      var b = window.paypal.Buttons({
+        fundingSource: o.payment.method === 'card' ? window.paypal.FUNDING.CARD : window.paypal.FUNDING.PAYPAL,
+        style: { shape: 'pill', layout: 'vertical' },
+        createOrder: function (d, a) { return a.order.create({ purchase_units: [{ reference_id: o.code, custom_id: o.code, description: 'Alou Cissé — commande ' + o.code, amount: { currency_code: 'EUR', value: eur } }] }); },
+        onApprove: function (d, a) { return a.order.capture().then(function (r) { return done(r.id); }); },
+        onError: function (e) { console.error(e); toast('Le paiement a échoué. Réessayez ou contactez-nous.'); }
+      });
+      if (b.isEligible()) b.render(box); else box.textContent = 'Ce moyen de paiement n’est pas disponible. Contactez-nous sur WhatsApp.';
+    }).catch(function () { box.innerHTML = '<p class="small">Impossible de charger PayPal. Vérifiez votre connexion et rechargez la page.</p>'; });
+}
+function vTrack(code) {
+  var mine = LS.get('ac_my_orders', []);
+  var form = '<h1>Suivre une commande</h1><form class="tbar" id="tform" style="max-width:520px"><label class="sr" for="tcode">Code de suivi</label><input id="tcode" type="search" placeholder="Code de suivi, ex. AC-7K2M9QXD" value="' + esc(code || '') + '" style="text-transform:uppercase"><button class="btn sm" style="height:44px">Suivre</button></form>' +
+    (mine.length && !code ? '<p class="small muted">Vos commandes récentes : ' + mine.map(function (c) { return '<a href="#/suivi/' + c + '"><u>' + c + '</u></a>'; }).join(' · ') + '</p>' : '') +
+    '<p class="small muted">Astuce : scannez le QR code reçu lors de la commande pour ouvrir directement cette page.</p><div id="tres"></div>';
+  $('#app').innerHTML = form;
+  $('#tform').onsubmit = function (e) { e.preventDefault(); var v = $('#tcode').value.trim().toUpperCase(); if (v) location.hash = '#/suivi/' + encodeURIComponent(v); };
+  if (!code) return;
+  $('#tres').innerHTML = '<div class="sk" style="height:240px"></div>';
+  DB.getOrder(code.toUpperCase()).then(function (o) {
+    if (S.view !== 'suivi') return;
+    if (!o) { $('#tres').innerHTML = '<div class="box">Aucune commande trouvée pour <b>' + esc(code) + '</b>. Vérifiez le code ou contactez-nous sur <a href="' + waLink() + '" target="_blank" rel="noopener"><u>WhatsApp</u></a>.</div>'; return; }
+    var m = o.delivery.mode, flow = FLOW[m] || FLOW.delivery, idx = flow.indexOf(o.status), hist = {};
+    (o.history || []).forEach(function (h) { hist[h.s] = h.at; });
+    var tl = o.status === 'annulee' ? '<p><span class="pill bad">Commande annulée</span></p>' : '<ul class="tl">' + flow.map(function (s, i) {
+      return '<li class="' + (i <= idx ? 'done' : '') + (i === idx ? ' cur' : '') + '"><b>' + stLabel(s, m) + '</b>' + (hist[s] ? '<br><span class="small muted">' + fmtDate(hist[s]) + '</span>' : '') + '</li>';
+    }).join('') + '</ul>';
+    var trk = o.tracking && o.tracking.number ? '<div class="note gold"><b>' + esc(o.tracking.carrier || 'Transporteur') + '</b> — n° de suivi : <b>' + esc(o.tracking.number) + '</b></div>' : '';
+    $('#tres').innerHTML = '<div class="co"><div class="box"><div class="row" style="justify-content:space-between"><span class="code" style="font-size:1rem">' + esc(o.code) + '</span>' + payPill(o) + '</div>' +
+      '<p class="small muted">Passée le ' + fmtDate(o.createdAt) + ' · ' + esc(MODES[m] ? MODES[m].t : m) + (o.delivery.zone ? ' · ' + esc(o.delivery.zone) : '') + '</p>' + tl + trk +
+      (o.paymentStatus === 'en_attente_paypal' ? '<a class="btn gold" href="#/confirmation/' + encodeURIComponent(o.code) + '">Finaliser le paiement</a>' : '') + '</div>' +
+      '<aside class="box">' + orderSummary(o) + '<a class="btn wa block" style="margin-top:12px" href="' + waLink('Bonjour, je souhaite des nouvelles de ma commande ' + o.code) + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'Une question ?</a></aside></div>';
+  }).catch(function () { $('#tres').innerHTML = '<div class="box">Connexion impossible. Réessayez quand vous serez en ligne.</div>'; });
+}
+
+function vStore() {
+  var os = openState();
+  return '<h1>La boutique</h1><div class="store"><div class="box"><h2>' + ic('pin') + ' ' + esc(STORE.address) + '</h2>' +
+    '<p class="open ' + (os.open ? 'yes' : '') + '">' + os.txt + '</p>' + hoursTable() +
+    '<p class="small muted">Heure de Bamako (GMT).</p><div class="row" style="margin-top:14px">' +
+    '<a class="btn wa" href="' + waLink('Bonjour Alou Cissé, ') + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'WhatsApp</a>' +
+    '<a class="btn ghost" href="' + telLink() + '">' + ic('phone', 18) + esc(STORE.phone) + '</a>' +
+    '<a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=' + STORE.lat + ',' + STORE.lng + '">' + ic('pin', 18) + 'Itinéraire</a></div></div>' +
+    '<div class="box"><h2>Plan d’accès</h2><div id="mapBox"><button class="mapph" id="mapBtn">' + ic('pin', 32) + '<span>Afficher le plan<br><span class="small muted">(chargé à la demande pour économiser vos données)</span></span></button></div></div>' +
+    '<div class="box"><h2>Click & Collect, comment ça marche ?</h2><ol class="small" style="padding-left:18px;margin:0"><li>Choisissez vos produits et « Retrait en boutique » à la commande.</li><li>Nous mettons les articles de côté pendant ' + (STORE.reservationHours || 48) + ' h.</li><li>Venez à Sébénikoro avec votre QR code ou votre numéro de commande.</li><li>Payez en espèces, Orange Money ou Moov Money, et repartez avec votre produit.</li></ol></div></div>';
+}
+
+/* ================= ROUTEUR ================= */
+var app = $('#app');
+function route(keepScroll) {
+  var h = location.hash.slice(1) || '/', parts = h.split('?'), path = parts[0].split('/').filter(Boolean), q = new URLSearchParams(parts[1] || '');
+  var v = path[0] || 'home', prev = S.view; S.view = v;
+  if (v !== 'produit') S.pq = 1;
+  $$('[data-nav]').forEach(function (a) { a.classList.toggle('on', a.dataset.nav === v || (v === 'produit' && a.dataset.nav === 'catalogue') || (v === 'commande' && a.dataset.nav === 'panier')); });
+  var titles = { home: 'Électronique & High-Tech à Bamako', catalogue: 'Catalogue', panier: 'Panier', commande: 'Commande', suivi: 'Suivi de commande', boutique: 'La boutique — Sébénikoro', confirmation: 'Commande confirmée' };
+  switch (v) {
+    case 'home': app.innerHTML = vHome(); break;
+    case 'catalogue': app.innerHTML = vCatalog(q); bindCatalog(); break;
+    case 'produit': {
+      var id = decodeURIComponent(path[1] || ''); app.innerHTML = vProduct(id);
+      var p = byId(id); if (p) { document.title = p.name + ' — Alou Cissé'; DB.getImage(id).then(function (src) { var im = $('#pdimg'); if (src && im) im.src = src; }); }
+      break;
+    }
+    case 'panier': app.innerHTML = vCart(); break;
+    case 'commande': app.innerHTML = vCheckout(); bindCheckout(); break;
+    case 'confirmation': vConfirm(decodeURIComponent(path[1] || '')); break;
+    case 'suivi': vTrack(path[1] ? decodeURIComponent(path[1]) : ''); break;
+    case 'boutique': app.innerHTML = vStore(); break;
+    default: app.innerHTML = '<div class="empty"><p>Page introuvable.</p><a class="btn" href="#/">Accueil</a></div>';
+  }
+  if (v !== 'produit') document.title = 'Alou Cissé — ' + (titles[v] || 'Électronique & High-Tech');
+  if (!keepScroll && prev !== v + path[1]) window.scrollTo(0, 0);
+}
+
+/* Délégation des clics */
+document.addEventListener('click', function (e) {
+  var t = e.target.closest('[data-add],[data-addq],[data-collect],[data-pq],[data-cq],[data-rm],#placeBtn,#mapBtn,#themeBtn');
+  if (!t) return;
+  if (t.dataset.add) { e.preventDefault(); addToCart(t.dataset.add, 1); return; }
+  if (t.dataset.addq) { addToCart(t.dataset.addq, S.pq); return; }
+  if (t.dataset.collect) { if (addToCart(t.dataset.collect, S.pq, true)) { co.mode = 'collect'; saveCo(); location.hash = '#/commande'; } return; }
+  if (t.dataset.pq) {
+    var p = byId(location.hash.split('/')[2] ? decodeURIComponent(location.hash.split('/')[2]) : ''); if (!p) return;
+    var max = Math.min(+p.stock || 0, MAXQ); S.pq = Math.min(Math.max(1, S.pq + +t.dataset.pq), max); $('#pqv').textContent = S.pq; return;
+  }
+  if (t.dataset.cq) { var it = cart.filter(function (i) { return i.id === t.dataset.cq; })[0]; if (it) setQty(it.id, it.qty + +t.dataset.d); route(true); return; }
+  if (t.dataset.rm) { setQty(t.dataset.rm, 0); route(true); return; }
+  if (t.id === 'placeBtn') { placeOrder(t); return; }
+  if (t.id === 'mapBtn') {
+    var d = 0.012;
+    $('#mapBox').innerHTML = '<iframe class="map" title="Plan d’accès à la boutique" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=' + (STORE.lng - d) + ',' + (STORE.lat - d * .7) + ',' + (STORE.lng + d) + ',' + (STORE.lat + d * .7) + '&layer=mapnik&marker=' + STORE.lat + ',' + STORE.lng + '"></iframe>';
+    return;
+  }
+  if (t.id === 'themeBtn') {
+    var dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.theme = dark ? 'light' : 'dark'; LS.set('ac_theme', dark ? 'light' : 'dark'); paintTheme();
+  }
+});
+function paintTheme() {
+  var dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  $('#themeBtn').innerHTML = ic(dark ? 'sun' : 'moon', 18);
+  $('#themeColor').setAttribute('content', dark ? '#000000' : '#f5f5f7');
+}
+
+/* ================= TAUX USD ================= */
+function loadUsd() {
+  var c = LS.get('ac_usd', null);
+  if (c && Date.now() - c.t < 12 * 3600e3) { S.usdAuto = c.v; return; }
+  fetch('https://open.er-api.com/v6/latest/USD').then(function (r) { return r.json(); }).then(function (j) {
+    var v = j && j.rates && j.rates.XOF;
+    if (v > 100) { S.usdAuto = v; LS.set('ac_usd', { v: v, t: Date.now() }); if (S.cur === 'USD' && S.view !== 'commande') route(true); }
+  }).catch(function () {});
+}
+
+/* ================= DÉMARRAGE ================= */
+function boot() {
+  $('#hsIc').innerHTML = ic('search', 18); $('#cartIc').innerHTML = ic('cart', 20);
+  $$('[data-ic]').forEach(function (s) { s.innerHTML = ic(s.dataset.ic, 22); });
+  paintTheme();
+  matchMedia('(prefers-color-scheme: dark)').addEventListener && matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintTheme);
+  $('#cur').value = S.cur;
+  $('#cur').onchange = function () { S.cur = this.value; LS.set('ac_cur', S.cur); if (S.cur === 'USD') loadUsd(); route(true); };
+  if (S.cur === 'USD') loadUsd();
+  $('#hsearch').onsubmit = function (e) { e.preventDefault(); var v = $('#hsq').value.trim(); location.hash = '#/catalogue' + (v ? '?q=' + encodeURIComponent(v) : ''); };
+  $('#fAddr').textContent = STORE.address || ''; $('#fOpen').textContent = openState().txt;
+  $('#fTel').textContent = STORE.phone || ''; $('#fTel').href = telLink();
+  $('#fWa').href = waLink(); $('#fMail').textContent = STORE.email || ''; $('#fMail').href = 'mailto:' + (STORE.email || '');
+  $('#yr').textContent = new Date().getFullYear();
+  $('#demoBar').hidden = !DEMO;
+  var net = function () { $('#offBar').hidden = navigator.onLine; }; addEventListener('online', net); addEventListener('offline', net); net();
+  saveCart();
+  window.addEventListener('hashchange', function () { route(); });
+  route();
+
+  DB.init().then(function () {
+    DB.watchSettings(function (s) { S.settings = Object.assign({}, C.defaults, s || {}); if (S.view === 'commande' && $('#modeF')) { $('#modeF').innerHTML = modeFields(); $('#cosum').innerHTML = sumHTML(); } });
+    DB.watchProducts(function (list) {
+      S.products = list; S.loaded = true;
+      LS.set('ac_cache_products', list);
+      cart = cart.filter(function (c) { return byId(c.id); }); saveCart();
+      if (S.view === 'catalogue') renderGrid();
+      else if (S.view === 'home' || S.view === 'produit' || S.view === 'panier') route(true);
+    });
+  });
+
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  }
+}
+boot();
+})();
+</script>
+</body>
+</html>
