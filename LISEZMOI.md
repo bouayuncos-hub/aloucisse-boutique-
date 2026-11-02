@@ -8,7 +8,7 @@ Boutique PWA HTML/CSS/JS + Firebase, déployée gratuitement sur Vercel.
 | Fichier | Rôle |
 |---|---|
 | `index.html` | La boutique (accueil, catalogue, fiche produit, panier, commande, confirmation + QR, suivi, page boutique) |
-| `admin.html` | Administration : tableau de bord, commandes, produits & stocks, réglages, journal d'audit |
+| `admin.html` | Administration protégée par mot de passe : tableau de bord, commandes, produits & stocks (publication), contenu du site, réglages, mot de passe, journal d'audit |
 | `config.js` | **Le seul fichier à modifier** : Firebase, PayPal, téléphone, WhatsApp, numéros Orange/Moov Money, horaires, position GPS |
 | `demo-data.js` | Catalogue de démonstration (14 produits) |
 | `sw.js`, `manifest.json`, `icon-*.png` | Application installable + catalogue consultable hors-ligne |
@@ -47,6 +47,18 @@ Sur GitHub, ouvrez `config.js` → icône crayon ✏️ :
 - ajustez les horaires `hours`.
 
 **Commit changes** → Vercel redéploie en ~30 s. Le bandeau « Mode démonstration » disparaît.
+
+## Étape 4 bis — Le compte administrateur et le mot de passe
+- **Mode démo** : ouvrez `/admin.html`, mot de passe **`alou2026`**. Seule son empreinte chiffrée figure dans `config.js`.
+- **Production (Firebase)** : à l'étape 3.5, créez l'utilisateur avec l'e-mail indiqué dans `adminEmail` de `config.js` et le mot de passe **`alou2026`**. L'écran de connexion ne demande que le mot de passe (lien « Autre compte administrateur » pour un gérant).
+- ⚠️ `alou2026` est court et a été partagé : **changez-le dès la mise en ligne** dans **Réglages → Sécurité** (8 caractères minimum, mélangez lettres, chiffres et symboles).
+
+**Ce que seul l'administrateur peut faire** (garanti par `firestore.rules`, pas seulement par l'interface) :
+- publier, modifier, dépublier ou supprimer un produit (case « Publié » dans la fiche produit) ;
+- modifier tout le contenu du site dans l'onglet **Contenu du site** : bandeau d'annonce, nom, slogan, textes de l'accueil, les 4 avantages, adresse, téléphone, WhatsApp, e-mail, numéros Orange/Moov Money, position sur le plan, durée de réservation, horaires, pied de page ;
+- modifier les tarifs de livraison, voir et traiter les commandes, lire le journal d'audit.
+
+Les visiteurs peuvent uniquement passer commande, ce qui diminue le stock et ne peut pas l'augmenter.
 
 ## Étape 5 — Charger le catalogue
 Ouvrez `https://…/admin.html`, connectez-vous. Le tableau de bord propose **« Importer les produits de démonstration »** : un clic, puis modifiez prix, stocks et photos (onglet Produits), ou supprimez-les et créez les vôtres. Les photos sont compressées automatiquement (≈ 15 Ko la miniature).

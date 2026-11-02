@@ -20,6 +20,7 @@ header .wrap{display:flex;align-items:center;gap:12px;min-height:58px;flex-wrap:
 .logo{display:flex;align-items:center;gap:8px;font-weight:700}
 .logo b{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--ink);color:var(--gold);font-size:.8rem}
 .tabs{display:flex;gap:4px;overflow-x:auto;flex:1}
+@media(max-width:760px){.tabs{order:3;flex-basis:100%;padding-bottom:8px}header .wrap{gap:8px;padding-top:8px}}
 .tabs button{border:0;background:none;padding:8px 12px;border-radius:999px;cursor:pointer;color:var(--muted);white-space:nowrap}
 .tabs button.on{background:var(--ink);color:var(--ink-text)}
 .cnt{display:inline-block;min-width:18px;padding:0 5px;border-radius:999px;background:var(--gold);color:#000;font-size:.7rem;font-weight:700;margin-left:4px;text-align:center}
@@ -42,7 +43,7 @@ h2{font-size:1.05rem;margin:0 0 10px}
 textarea.in{height:auto;padding:8px 10px;min-height:80px;resize:vertical}
 label.f{display:block;font-size:.8rem;font-weight:600;margin:10px 0 4px}
 .g2{display:grid;gap:0 12px}@media(min-width:600px){.g2{grid-template-columns:1fr 1fr}}
-.g3{display:grid;gap:0 12px;grid-template-columns:1fr 1fr 1fr}
+.g3{display:grid;gap:0 12px}@media(min-width:600px){.g3{grid-template-columns:1fr 1fr 1fr}}
 .list{display:grid;gap:8px}
 .ord{display:grid;grid-template-columns:1fr auto;gap:4px 12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;cursor:pointer;text-align:left;width:100%}
 .ord:hover{border-color:var(--gold)}
@@ -86,9 +87,10 @@ table.t td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:to
   <div class="box">
     <div class="logo" style="margin-bottom:12px"><b>AC</b>Administration</div>
     <form id="lform">
-      <label class="f" for="lmail">E-mail</label><input class="in" id="lmail" type="email" autocomplete="username" required>
-      <label class="f" for="lpass">Mot de passe</label><input class="in" id="lpass" type="password" autocomplete="current-password" required>
+      <div id="lmailBox" hidden><label class="f" for="lmail">E-mail du compte</label><input class="in" id="lmail" type="email" autocomplete="username"></div>
+      <label class="f" for="lpass">Mot de passe administrateur</label><input class="in" id="lpass" type="password" autocomplete="current-password" required>
       <button class="btn" style="width:100%;margin-top:14px">Se connecter</button>
+      <p class="small" style="margin:10px 0 0"><a href="#" id="lother">Autre compte administrateur</a></p>
       <p id="lerr" class="small" style="color:var(--danger)"></p>
     </form>
   </div>
@@ -101,6 +103,7 @@ table.t td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:to
       <button data-t="dash" class="on">Tableau de bord</button>
       <button data-t="orders">Commandes<span class="cnt" id="todo" hidden></span></button>
       <button data-t="products">Produits</button>
+      <button data-t="site">Contenu du site</button>
       <button data-t="settings">Réglages</button>
     </nav>
     <a class="btn ghost sm" href="index.html" target="_blank">Voir la boutique</a>
@@ -129,6 +132,8 @@ var tt; function toast(m) { var t = $('#toast'); t.textContent = m; t.classList.
 function fcfa(x) { return new Intl.NumberFormat('fr-FR').format(Math.round(+x || 0)) + '\u00a0FCFA'; }
 function fmtDate(t) { try { return new Date(t).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Africa/Bamako' }); } catch (e) { return new Date(t).toLocaleString('fr-FR'); } }
 function digits(s) { return String(s || '').replace(/\D/g, ''); }
+function sha256(t) { return crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return ('0' + x.toString(16)).slice(-2); }).join(''); }); }
+function demoHash() { return LS.get('ac_demo_pass', null) || C.demoPasswordHash || ''; }
 function slug(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'produit'; }
 
 var CATS = { smartphones: 'Smartphones', ordinateurs: 'Ordinateurs', audio: 'Audio', connectes: 'Objets connectés', gadgets: 'Gadgets', composants: 'Composants' };
@@ -145,7 +150,7 @@ function payPill(s) { var p = PST[s] || ['', s]; return pill(p[0], p[1]); }
 
 /* ============ Couche données ============ */
 var db = null, auth = null, me = { email: 'demo' };
-var D = { orders: [], products: [], settings: Object.assign({}, C.defaults) };
+var D = { orders: [], products: [], settings: Object.assign({}, C.defaults), site: {} };
 var ADB = {
   init: function () {
     if (DEMO) return Promise.resolve();
@@ -165,6 +170,7 @@ var ADB = {
         D.orders = Object.keys(o).map(function (k) { return o[k]; }).sort(function (a, b) { return b.createdAt - a.createdAt; });
         D.products = LS.get('ac_demo_products', null) || (window.AC_SEED || []).slice();
         D.settings = Object.assign({}, C.defaults, LS.get('ac_demo_settings', {}));
+        D.site = LS.get('ac_demo_site', {});
         render();
       };
       load(); addEventListener('storage', load); return;
@@ -178,6 +184,7 @@ var ADB = {
     }, function (e) { toast('Erreur commandes : ' + e.message); });
     db.collection('products').onSnapshot(function (s) { D.products = s.docs.map(function (d) { var o = d.data(); o.id = d.id; return o; }); render(); });
     db.doc('settings/store').onSnapshot(function (d) { D.settings = Object.assign({}, C.defaults, d.exists ? d.data() : {}); if (cur === 'settings' && !$('#setForm')) render(); });
+    db.doc('settings/site').onSnapshot(function (d) { D.site = d.exists ? d.data() : {}; if (cur === 'site' && !$('#siteForm')) render(); });
   },
   updateOrder: function (o, patch, action, detail) {
     if (DEMO) { var all = LS.get('ac_demo_orders', {}); Object.assign(all[o.code], patch); LS.set('ac_demo_orders', all); Object.assign(o, patch); }
@@ -227,6 +234,20 @@ var ADB = {
     var w = DEMO ? Promise.resolve() : db.doc('settings/store').set(s);
     return w.then(function () { return ADB.log('reglages', 'settings/store', 'Mise à jour des tarifs'); });
   },
+  saveSite: function (site) {
+    if (DEMO) { LS.set('ac_demo_site', site); D.site = site; }
+    var w = DEMO ? Promise.resolve() : db.doc('settings/site').set(site);
+    return w.then(function () { return ADB.log('contenu_site', 'settings/site', 'Mise à jour du contenu du site'); });
+  },
+  changePassword: function (oldP, newP) {
+    if (DEMO) return sha256(oldP).then(function (h) { if (h !== demoHash()) throw new Error('Mot de passe actuel incorrect'); return sha256(newP); })
+      .then(function (h) { LS.set('ac_demo_pass', h); try { sessionStorage.setItem('ac_demo_admin', h); } catch (e) {} return ADB.log('mot_de_passe', 'admin', 'Mot de passe modifié'); });
+    var u = auth.currentUser;
+    return u.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(u.email, oldP))
+      .catch(function () { throw new Error('Mot de passe actuel incorrect'); })
+      .then(function () { return u.updatePassword(newP); })
+      .then(function () { return ADB.log('mot_de_passe', u.email, 'Mot de passe modifié'); });
+  },
   audit: function () {
     if (DEMO) return Promise.resolve(LS.get('ac_demo_audit', []).slice(0, 60));
     return db.collection('auditLog').orderBy('at', 'desc').limit(60).get().then(function (s) { return s.docs.map(function (d) { return d.data(); }); });
@@ -250,6 +271,7 @@ function render() {
   if (cur === 'orders') { if (!$('#oq')) v.innerHTML = vOrdersShell(); renderOrders(); }
   if (cur === 'products') { if (!$('#pq')) v.innerHTML = vProductsShell(); renderProducts(); }
   if (cur === 'settings' && !$('#setForm')) { v.innerHTML = vSettings(); loadAudit(); }
+  if (cur === 'site' && !$('#siteForm')) v.innerHTML = vSite();
 }
 function orderRow(o) {
   return '<button class="ord" data-o="' + esc(o.code) + '"><div><span class="c">' + esc(o.code) + '</span> ' + stPill(o.status) + ' ' + payPill(o.paymentStatus) +
@@ -308,7 +330,7 @@ function renderProducts() {
   $('#plist').innerHTML = l.map(function (p) {
     var s = +p.stock || 0;
     return '<div class="prod"><img src="' + esc(p.thumb || '') + '" alt="" onerror="this.style.visibility=\'hidden\'"><div><div class="n">' + esc(p.name) + '</div><div class="small muted">' + esc(CATS[p.cat] || p.cat) + ' · ' + fcfa(p.price) +
-      (p.active === false ? ' · ' + pill('bad', 'Masqué') : '') + (p.featured ? ' · ' + pill('gold', 'À la une') : '') + '</div></div>' +
+      (p.active === false ? ' · ' + pill('bad', 'Brouillon — non publié') : '') + (p.featured ? ' · ' + pill('gold', 'À la une') : '') + '</div></div>' +
       '<div style="display:flex;gap:6px;align-items:center"><label class="stock">Stock <input type="number" min="0" step="1" value="' + s + '" data-stock="' + esc(p.id) + '" class="' + (s <= 0 ? 'out' : s <= 2 ? 'low' : '') + '"></label><button class="btn ghost sm" data-edit="' + esc(p.id) + '">Modifier</button></div></div>';
   }).join('') || '<div class="empty">Aucun produit.</div>';
 }
@@ -324,6 +346,9 @@ function vSettings() {
     '<div><label class="f" for="sRelays">Points relais</label><textarea class="in" id="sRelays" rows="4">' + esc(lines(s.relays)) + '</textarea><label class="f" for="sIntl">Zones internationales</label><textarea class="in" id="sIntl" rows="5">' + esc(lines(s.intlZones)) + '</textarea></div></div>' +
     '<button class="btn" style="margin-top:14px">Enregistrer les réglages</button></form>' +
     '<div class="box"><h2>Boutique</h2><p class="small">Adresse, téléphone, WhatsApp, numéros Orange/Moov Money et horaires se modifient dans <b>config.js</b>.</p><p class="small">' + esc(STORE.address) + ' · ' + esc(STORE.phone) + ' · OM ' + esc(STORE.orangeMoney) + ' · Moov ' + esc(STORE.moovMoney) + '</p></div>' +
+    '<div class="box"><h2>Sécurité — mot de passe administrateur</h2><form id="pwForm"><div class="g3"><div><label class="f" for="pwOld">Mot de passe actuel</label><input class="in" id="pwOld" type="password" autocomplete="current-password" required></div>' +
+    '<div><label class="f" for="pwNew">Nouveau (8 caractères min.)</label><input class="in" id="pwNew" type="password" autocomplete="new-password" minlength="8" required></div><div><label class="f" for="pwNew2">Confirmer</label><input class="in" id="pwNew2" type="password" autocomplete="new-password" required></div></div>' +
+    '<button class="btn" style="margin-top:12px">Changer le mot de passe</button></form></div>' +
     '<div class="box"><h2>Journal d’audit</h2><div id="audit" class="small muted">Chargement…</div></div>';
 }
 function loadAudit() {
@@ -331,6 +356,51 @@ function loadAudit() {
     var el = $('#audit'); if (!el) return;
     el.innerHTML = a.length ? '<table class="t">' + a.map(function (e) { return '<tr><td>' + fmtDate(e.at) + '</td><td>' + esc(e.by) + '</td><td><b>' + esc(e.action) + '</b> ' + esc(e.target) + '<br>' + esc(e.detail) + '</td></tr>'; }).join('') + '</table>' : 'Aucune action enregistrée.';
   }).catch(function (e) { var el = $('#audit'); if (el) el.textContent = 'Erreur : ' + e.message; });
+}
+
+/* ============ Contenu du site ============ */
+var DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+function siteData() { var x = D.site || {}; return { store: Object.assign({}, C.store, x.store || {}), content: Object.assign({}, C.content, x.content || {}) }; }
+function inp(g, k, label, v, type, ph) { return '<div><label class="f">' + label + '</label><input class="in" data-g="' + g + '" data-k="' + k + '" type="' + (type || 'text') + '"' + (type === 'number' ? ' step="any"' : '') + ' value="' + esc(v == null ? '' : v) + '" placeholder="' + esc(ph || '') + '"></div>'; }
+function area(g, k, label, v, rows) { return '<div><label class="f">' + label + '</label><textarea class="in" data-g="' + g + '" data-k="' + k + '" rows="' + (rows || 3) + '">' + esc(v || '') + '</textarea></div>'; }
+function hoursText(h, d) { return (h || []).filter(function (x) { return x.d === d; }).map(function (x) { return x.open + '-' + x.close; }).join(', '); }
+function vSite() {
+  var x = siteData(), st = x.store, c = x.content, perks = c.perks || [];
+  return '<h1>Contenu du site</h1><p class="small muted">Chaque modification est visible immédiatement sur la boutique, sans redéploiement. Les produits se publient dans l’onglet Produits.</p><form id="siteForm">' +
+    '<div class="box"><h2>Bandeau d’annonce</h2>' + inp('content', 'announce', 'Message affiché en haut du site (vide = masqué)', c.announce, 'text', 'Ex. −10 % sur les écouteurs jusqu’au 30 novembre') + '</div>' +
+    '<div class="box"><h2>Identité</h2><div class="g2">' + inp('store', 'name', 'Nom de la boutique', st.name) + inp('store', 'tagline', 'Slogan', st.tagline) + '</div></div>' +
+    '<div class="box"><h2>Page d’accueil</h2>' + inp('content', 'kicker', 'Surtitre', c.kicker) + inp('content', 'title', 'Titre principal', c.title) + area('content', 'text', 'Texte de présentation', c.text, 3) +
+    '<div class="g2">' + inp('content', 'cta1', 'Bouton 1 (catalogue)', c.cta1) + inp('content', 'cta2', 'Bouton 2 (Click & Collect)', c.cta2) + '</div>' +
+    '<h2 style="margin-top:16px">Les 4 avantages</h2>' + [0, 1, 2, 3].map(function (i) { var p = perks[i] || {}; return '<div class="g2"><div><label class="f">Avantage ' + (i + 1) + ' — titre</label><input class="in" data-perk="' + i + '" data-pk="t" value="' + esc(p.t) + '"></div><div><label class="f">Texte</label><input class="in" data-perk="' + i + '" data-pk="d" value="' + esc(p.d) + '"></div></div>'; }).join('') + '</div>' +
+    '<div class="box"><h2>Contact & paiements</h2>' + inp('store', 'address', 'Adresse', st.address) + '<div class="g2">' + inp('store', 'phone', 'Téléphone affiché', st.phone) + inp('store', 'whatsapp', 'WhatsApp (chiffres, ex. 22376123456)', st.whatsapp) +
+    inp('store', 'email', 'E-mail', st.email, 'email') + inp('store', 'reservationHours', 'Durée de réservation Click & Collect (heures)', st.reservationHours, 'number') +
+    inp('store', 'orangeMoney', 'N° marchand Orange Money', st.orangeMoney) + inp('store', 'moovMoney', 'N° marchand Moov Money', st.moovMoney) +
+    inp('store', 'lat', 'Latitude (plan d’accès)', st.lat, 'number') + inp('store', 'lng', 'Longitude (plan d’accès)', st.lng, 'number') + '</div>' +
+    '<p class="small muted">Coordonnées : sur Google Maps, clic droit sur la boutique, puis cliquez sur les chiffres pour les copier.</p></div>' +
+    '<div class="box"><h2>Horaires d’ouverture</h2><p class="small muted">Heure de Bamako. Format <b>08:30-20:00</b> ; deux plages : <b>08:30-13:00, 15:00-20:00</b> ; vide = fermé.</p><div class="g2">' +
+    [1, 2, 3, 4, 5, 6, 0].map(function (d) { return '<div><label class="f">' + DAYS[d] + '</label><input class="in" data-day="' + d + '" value="' + esc(hoursText(st.hours, d)) + '" placeholder="Fermé"></div>'; }).join('') + '</div></div>' +
+    '<div class="box"><h2>Pied de page</h2>' + area('content', 'footer', 'Texte de présentation', c.footer, 3) + inp('content', 'copyright', 'Mention de copyright', c.copyright) + '</div>' +
+    '<button class="btn gold" style="position:sticky;bottom:16px">Enregistrer le contenu du site</button></form>';
+}
+function collectSite() {
+  var out = { store: {}, content: {} }, err = '';
+  $$('#siteForm [data-g]').forEach(function (el) { var v = el.value.trim(); out[el.dataset.g][el.dataset.k] = el.type === 'number' ? (v === '' ? null : parseFloat(v)) : v; });
+  out.store.whatsapp = digits(out.store.whatsapp);
+  out.content.perks = [0, 1, 2, 3].map(function (i) { return { t: $('[data-perk="' + i + '"][data-pk="t"]').value.trim(), d: $('[data-perk="' + i + '"][data-pk="d"]').value.trim() }; });
+  out.store.hours = [];
+  $$('#siteForm [data-day]').forEach(function (el) {
+    var d = +el.dataset.day;
+    el.value.split(',').map(function (r) { return r.trim(); }).filter(Boolean).forEach(function (r) {
+      var m = r.match(/^(\d{1,2})[:h.]?(\d{2})\s*[-–à]\s*(\d{1,2})[:h.]?(\d{2})$/);
+      if (!m) { err = 'Horaire invalide pour ' + DAYS[d] + ' : « ' + r + ' » (exemple : 08:30-20:00)'; return; }
+      var f = function (h, mm) { return ('0' + h).slice(-2) + ':' + mm; };
+      out.store.hours.push({ d: d, open: f(m[1], m[2]), close: f(m[3], m[4]) });
+    });
+  });
+  if (out.store.reservationHours == null || isNaN(out.store.reservationHours)) out.store.reservationHours = 48;
+  if (out.store.lat == null || out.store.lng == null || isNaN(out.store.lat) || isNaN(out.store.lng)) err = 'Latitude et longitude sont obligatoires';
+  if (!out.store.name) err = 'Le nom de la boutique est obligatoire';
+  return { err: err, site: out };
 }
 
 /* ============ Fenêtres ============ */
@@ -371,7 +441,7 @@ function productForm(id) {
     '<label class="f" for="fSpecs">Caractéristiques (une par ligne : <i>Clé : valeur</i>)</label><textarea class="in" id="fSpecs" rows="4">' + esc(specs) + '</textarea>' +
     '<label class="f" for="fImg">Photo (compressée automatiquement en WebP)</label><div class="bar" style="align-items:center"><img id="fPrev" class="preview" src="' + esc(p.thumb || '') + '" alt=""><input id="fImg" type="file" accept="image/*"></div>' +
     '<label class="chk"><input type="checkbox" id="fFeat"' + (p.featured ? ' checked' : '') + '> À la une sur l’accueil</label>' +
-    '<label class="chk"><input type="checkbox" id="fAct"' + (p.active !== false ? ' checked' : '') + '> Visible dans la boutique</label>' +
+    '<label class="chk"><input type="checkbox" id="fAct"' + (p.active !== false ? ' checked' : '') + '> <b>Publié</b> — visible et en vente dans la boutique</label>' +
     '<div class="bar" style="margin-top:16px;justify-content:space-between"><button class="btn" id="pSave">Enregistrer</button>' + (id ? '<button type="button" class="btn bad sm" data-act="del" data-id="' + esc(id) + '">Supprimer</button>' : '') + '</div></form>');
   var newImg = null;
   $('#fImg').onchange = function () {
@@ -424,7 +494,7 @@ document.addEventListener('click', function (e) {
   if (t.id === 'dlgX') { closeDlg(); return; }
   if (t.id === 'csvBtn') { csv(); return; }
   if (t.id === 'seedBtn') { t.disabled = true; ADB.importSeed().then(function () { toast('Catalogue de démonstration importé'); }).catch(function (x) { toast(x.message); t.disabled = false; }); return; }
-  if (t.id === 'logout') { if (DEMO) { toast('Mode démo : pas de compte'); return; } auth.signOut().then(function () { location.reload(); }); return; }
+  if (t.id === 'logout') { if (DEMO) { try { sessionStorage.removeItem('ac_demo_admin'); } catch (x) {} location.reload(); return; } auth.signOut().then(function () { location.reload(); }); return; }
   var a = t.dataset.act, o = t.dataset.c ? findOrder(t.dataset.c) : null, done = function (m) { return function () { toast(m); if (o) orderDetail(o.code); }; }, fail = function (x) { toast('Erreur : ' + x.message); };
   if (a === 'st' && o) { var hist = (o.history || []).concat({ s: t.dataset.s, at: Date.now(), by: me.email }); ADB.updateOrder(o, { status: t.dataset.s, history: hist }, 'statut', ST[o.status] + ' → ' + ST[t.dataset.s]).then(done('Statut mis à jour')).catch(fail); }
   if (a === 'pay' && o) { var ps = $('#payS').value; ADB.updateOrder(o, { paymentStatus: ps }, 'paiement', (PST[o.paymentStatus] || [, o.paymentStatus])[1] + ' → ' + PST[ps][1]).then(done('Paiement mis à jour')).catch(fail); }
@@ -445,6 +515,18 @@ document.addEventListener('change', function (e) {
   }
 });
 document.addEventListener('submit', function (e) {
+  if (e.target.id === 'siteForm') {
+    e.preventDefault(); var r = collectSite(); if (r.err) { toast(r.err); return; }
+    ADB.saveSite(r.site).then(function () { toast('Contenu du site enregistré — en ligne'); }).catch(function (x) { toast('Erreur : ' + x.message); });
+    return;
+  }
+  if (e.target.id === 'pwForm') {
+    e.preventDefault(); var o = $('#pwOld').value, n = $('#pwNew').value;
+    if (n.length < 8) { toast('Le nouveau mot de passe doit faire au moins 8 caractères'); return; }
+    if (n !== $('#pwNew2').value) { toast('La confirmation ne correspond pas'); return; }
+    ADB.changePassword(o, n).then(function () { toast('Mot de passe modifié'); e.target.reset(); }).catch(function (x) { toast(/recent|requires-recent/.test(x.code || '') ? 'Reconnectez-vous puis réessayez' : x.message); });
+    return;
+  }
   if (e.target.id !== 'setForm') return; e.preventDefault();
   var s = { usdRate: parseFloat($('#sUsd').value) || 600, freeFrom: parseInt($('#sFree').value, 10) || 0, zones: parseLines($('#sZones').value), relays: parseLines($('#sRelays').value), intlZones: parseLines($('#sIntl').value) };
   if (!s.zones.length) { toast('Au moins un quartier est requis'); return; }
@@ -453,19 +535,38 @@ document.addEventListener('submit', function (e) {
 
 /* ============ Démarrage ============ */
 function start() { $('#login').hidden = true; $('#adm').hidden = false; ADB.watch(); render(); }
+function showLogin() { $('#adm').hidden = true; $('#login').hidden = false; setTimeout(function () { $('#lpass').focus(); }, 50); }
+$('#lmail').value = C.adminEmail || '';
+if (!C.adminEmail) $('#lmailBox').hidden = false;
+$('#lother').onclick = function (e) { e.preventDefault(); $('#lmailBox').hidden = false; $('#lmail').focus(); };
 ADB.init().then(function () {
-  if (DEMO) { $('#demoBar').hidden = false; start(); return; }
+  if (DEMO) {
+    $('#demoBar').hidden = false; $('#lother').hidden = true;
+    var ok = false; try { ok = sessionStorage.getItem('ac_demo_admin') === demoHash(); } catch (e) {}
+    if (ok) start(); else showLogin();
+    $('#lform').onsubmit = function (e) {
+      e.preventDefault();
+      sha256($('#lpass').value).then(function (h) {
+        if (h !== demoHash()) { $('#lerr').textContent = 'Mot de passe incorrect.'; return; }
+        try { sessionStorage.setItem('ac_demo_admin', h); } catch (x) {}
+        $('#lerr').textContent = ''; ADB.log('connexion', 'admin', 'Connexion (démo)'); start();
+      });
+    };
+    return;
+  }
   auth.onAuthStateChanged(function (u) {
-    if (!u) { $('#login').hidden = false; $('#adm').hidden = true; return; }
+    if (!u) { showLogin(); return; }
     db.doc('admins/' + u.uid).get().then(function (d) {
-      if (!d.exists) { $('#lerr').textContent = 'Ce compte n’est pas autorisé (UID : ' + u.uid + '). Ajoutez-le dans la collection « admins ».'; $('#login').hidden = false; auth.signOut(); return; }
+      if (!d.exists) { $('#lerr').textContent = 'Ce compte n’est pas autorisé (UID : ' + u.uid + '). Ajoutez-le dans la collection « admins ».'; auth.signOut(); return; }
       me = { email: u.email, uid: u.uid }; start();
-    }).catch(function (e) { $('#lerr').textContent = 'Accès refusé : ' + e.message; $('#login').hidden = false; });
+    }).catch(function (e) { $('#lerr').textContent = 'Accès refusé : ' + e.message; showLogin(); });
   });
   $('#lform').onsubmit = function (e) {
     e.preventDefault(); $('#lerr').textContent = '';
-    auth.signInWithEmailAndPassword($('#lmail').value.trim(), $('#lpass').value).catch(function (x) {
-      $('#lerr').textContent = /invalid|wrong|not-found|credential/i.test(x.code || '') ? 'E-mail ou mot de passe incorrect.' : /too-many/.test(x.code || '') ? 'Trop de tentatives, réessayez plus tard.' : x.message;
+    var mail = ($('#lmail').value || C.adminEmail || '').trim();
+    if (!mail) { $('#lmailBox').hidden = false; $('#lerr').textContent = 'Indiquez l’e-mail du compte.'; return; }
+    auth.signInWithEmailAndPassword(mail, $('#lpass').value).catch(function (x) {
+      $('#lerr').textContent = /invalid|wrong|not-found|credential/i.test(x.code || '') ? 'Mot de passe incorrect.' : /too-many/.test(x.code || '') ? 'Trop de tentatives, réessayez plus tard.' : x.message;
     });
   };
 }).catch(function () { document.body.innerHTML = '<p style="padding:30px">Impossible de charger Firebase. Vérifiez votre connexion et config.js.</p>'; });

@@ -17,6 +17,14 @@ window.AC_CONFIG = {
   // Identifiant client PayPal (LIVE ou SANDBOX) — developer.paypal.com
   paypalClientId: "",
 
+  // E-mail du compte administrateur (créé dans Firebase > Authentication).
+  // Sur l'écran de connexion, seul le mot de passe est demandé.
+  adminEmail: "admin@alou-cisse.com",
+
+  // MODE DÉMO uniquement : empreinte SHA-256 du mot de passe « alou2026 ».
+  // En production, le mot de passe est celui du compte Firebase : il n'est JAMAIS écrit dans le code.
+  demoPasswordHash: "220e7ea0eac992781e5467a34d39e936213e401560c20ff3fb911a6cfeba90f4",
+
   store: {
     name: "Alou Cissé",
     tagline: "Électronique & High-Tech",
@@ -39,6 +47,24 @@ window.AC_CONFIG = {
       { d: 6, open: "09:00", close: "20:00" }
       // dimanche absent = fermé
     ]
+  },
+
+  // Textes du site par défaut (modifiables dans admin.html > Contenu du site)
+  content: {
+    announce: "",
+    kicker: "Sébénikoro · Bamako · International",
+    title: "La tech haut de gamme, près de chez vous.",
+    text: "Smartphones, ordinateurs, audio et objets connectés neufs et garantis. Retirez en boutique, faites-vous livrer dans Bamako ou expédier partout dans le monde.",
+    cta1: "Voir le catalogue",
+    cta2: "Click & Collect",
+    perks: [
+      { t: "Livraison Bamako", d: "Sébénikoro, Hamdallaye, ACI 2000…" },
+      { t: "Retrait en boutique", d: "Réservez en ligne, payez sur place" },
+      { t: "Mobile Money", d: "Orange Money, Moov Money, espèces" },
+      { t: "International", d: "Carte bancaire & PayPal" }
+    ],
+    footer: "Produits neufs et garantis. Retrait en boutique, livraison dans tout Bamako et expédition internationale.",
+    copyright: "Alou Cissé — Sébénikoro, Bamako, Mali"
   },
 
   // Valeurs par défaut (modifiables ensuite dans admin.html > Réglages)

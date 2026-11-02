@@ -69,6 +69,7 @@ h2{font-size:1.25rem;letter-spacing:-.01em;margin:0 0 .75rem}
 .bnav a.on{color:var(--text)}
 .bnav .badge{top:2px;right:calc(50% - 22px)}
 .offline{background:var(--warn-soft);color:var(--warn);font-size:.85rem;text-align:center;padding:6px 12px}
+.ann{background:var(--gold);color:#000;font-size:.88rem;font-weight:600;text-align:center;padding:8px 12px}
 .demo{background:var(--gold-soft);color:var(--gold);font-size:.8rem;text-align:center;padding:5px 12px}
 main{min-height:60vh;padding:20px 0 40px}
 /* Buttons */
@@ -218,7 +219,7 @@ footer a{display:block;padding:3px 0}
 <body>
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="#/" aria-label="Alou Cissé — accueil"><b>AC</b><span>Alou Cissé<small>Électronique & High-Tech</small></span></a>
+    <a class="logo" href="#/" aria-label="Alou Cissé — accueil"><b>AC</b><span><span id="lgName">Alou Cissé</span><small id="lgTag">Électronique & High-Tech</small></span></a>
     <nav class="hnav" aria-label="Navigation principale">
       <a href="#/catalogue" data-nav="catalogue">Catalogue</a>
       <a href="#/boutique" data-nav="boutique">La boutique</a>
@@ -238,6 +239,7 @@ footer a{display:block;padding:3px 0}
     </div>
   </div>
 </header>
+<div id="annBar" class="ann" role="note" hidden></div>
 <div id="demoBar" class="demo" hidden>Mode démonstration — données locales, aucun paiement réel. Renseignez <code>config.js</code> pour passer en production.</div>
 <div id="offBar" class="offline" hidden>Vous êtes hors-ligne — le catalogue reste consultable, la commande nécessite une connexion.</div>
 
@@ -245,11 +247,11 @@ footer a{display:block;padding:3px 0}
 
 <footer>
   <div class="wrap cols">
-    <div><b>Alou Cissé — Électronique & High-Tech</b><br><span id="fAddr"></span><br><span id="fOpen"></span><br><br>Produits neufs et garantis. Retrait en boutique, livraison dans tout Bamako et expédition internationale.</div>
+    <div><b id="fName"></b><br><span id="fAddr"></span><br><span id="fOpen"></span><br><br><span id="fText"></span></div>
     <div><b>Boutique</b><a href="#/catalogue">Catalogue</a><a href="#/boutique">Horaires & plan</a><a href="#/suivi">Suivre une commande</a></div>
     <div><b>Contact</b><a id="fTel" href="#"></a><a id="fWa" href="#" target="_blank" rel="noopener">WhatsApp</a><a id="fMail" href="#"></a></div>
   </div>
-  <div class="wrap small" style="margin-top:18px">© <span id="yr"></span> Alou Cissé — Sébénikoro, Bamako, Mali</div>
+  <div class="wrap small" style="margin-top:18px">© <span id="yr"></span> <span id="fCopy"></span></div>
 </footer>
 
 <nav class="bnav" aria-label="Navigation mobile">
@@ -268,7 +270,8 @@ footer a{display:block;padding:3px 0}
 
 /* ================= CONFIG & UTILITAIRES ================= */
 var C = window.AC_CONFIG || {};
-var STORE = C.store || {};
+var STORE = C.store || (C.store = {});
+var CONTENT = Object.assign({}, C.content || {});
 var DEMO = !(C.firebase && C.firebase.projectId);
 var EUR_XOF = 655.957;          // parité fixe FCFA / euro
 var MAXQ = 10;                  // quantité max par article et par commande
@@ -412,6 +415,15 @@ var DB = {
     if (!db) return;
     db.doc('settings/store').onSnapshot(function (d) { cb(d.exists ? d.data() : {}); }, function () {});
   },
+  watchSite: function (cb) {
+    if (DEMO) {
+      cb(LS.get('ac_demo_site', {}));
+      window.addEventListener('storage', function (e) { if (e.key === 'ac_demo_site') cb(LS.get('ac_demo_site', {})); });
+      return;
+    }
+    if (!db) return;
+    db.doc('settings/site').onSnapshot(function (d) { cb(d.exists ? d.data() : {}); }, function () {});
+  },
   getImage: function (id) {
     if (DEMO) return Promise.resolve(LS.get('ac_demo_img_' + id, null));
     if (!db) return Promise.resolve(null);
@@ -531,15 +543,12 @@ function vHome() {
   var feat = S.products.filter(function (p) { return p.featured; }).slice(0, 8);
   if (feat.length < 4) feat = S.products.slice(0, 8);
   var os = openState();
-  return '<section class="hero"><div class="kicker">Sébénikoro · Bamako · International</div>' +
-    '<h1>La tech haut de gamme, près de chez vous.</h1>' +
-    '<p>Smartphones, ordinateurs, audio et objets connectés neufs et garantis. Retirez en boutique, faites-vous livrer dans Bamako ou expédier partout dans le monde.</p>' +
-    '<div class="row"><a class="btn gold" href="#/catalogue">Voir le catalogue</a><a class="btn ghost" href="#/boutique">' + ic('store', 18) + 'Click & Collect</a></div></section>' +
-    '<div class="perks">' +
-    '<div class="perk">' + ic('truck') + '<div><b>Livraison Bamako</b>Sébénikoro, Hamdallaye, ACI 2000…</div></div>' +
-    '<div class="perk">' + ic('store') + '<div><b>Retrait en boutique</b>Réservez en ligne, payez sur place</div></div>' +
-    '<div class="perk">' + ic('phoneM') + '<div><b>Mobile Money</b>Orange Money, Moov Money, espèces</div></div>' +
-    '<div class="perk">' + ic('globe') + '<div><b>International</b>Carte bancaire & PayPal</div></div></div>' +
+  var pic = ['truck', 'store', 'phoneM', 'globe'];
+  return '<section class="hero"><div class="kicker">' + esc(CONTENT.kicker) + '</div>' +
+    '<h1>' + esc(CONTENT.title) + '</h1>' +
+    '<p>' + esc(CONTENT.text) + '</p>' +
+    '<div class="row"><a class="btn gold" href="#/catalogue">' + esc(CONTENT.cta1 || 'Voir le catalogue') + '</a><a class="btn ghost" href="#/boutique">' + ic('store', 18) + esc(CONTENT.cta2 || 'Click & Collect') + '</a></div></section>' +
+    '<div class="perks">' + (CONTENT.perks || []).slice(0, 4).map(function (p, i) { return p && p.t ? '<div class="perk">' + ic(pic[i]) + '<div><b>' + esc(p.t) + '</b>' + esc(p.d) + '</div></div>' : ''; }).join('') + '</div>' +
     '<div class="sec"><h2>Catégories</h2><a href="#/catalogue">Tout voir</a></div>' +
     '<div class="cats">' + CATS.map(function (c) { return '<a class="cat" href="#/catalogue?cat=' + c.id + '"><img src="' + ph(c.id) + '" alt="" width="100" height="90">' + c.name + '</a>'; }).join('') + '</div>' +
     '<div class="sec"><h2>Sélection du moment</h2><a href="#/catalogue">Catalogue complet</a></div>' +
@@ -956,6 +965,25 @@ function loadUsd() {
   }).catch(function () {});
 }
 
+/* ================= CONTENU MODIFIABLE (admin) ================= */
+function paintChrome() {
+  $('#lgName').textContent = STORE.name || 'Alou Cissé'; $('#lgTag').textContent = STORE.tagline || '';
+  $('#fName').textContent = (STORE.name || '') + (STORE.tagline ? ' — ' + STORE.tagline : '');
+  $('#fAddr').textContent = STORE.address || ''; $('#fOpen').textContent = openState().txt;
+  $('#fText').textContent = CONTENT.footer || ''; $('#fCopy').textContent = CONTENT.copyright || '';
+  $('#fTel').textContent = STORE.phone || ''; $('#fTel').href = telLink();
+  $('#fWa').href = waLink(); $('#fMail').textContent = STORE.email || ''; $('#fMail').href = 'mailto:' + (STORE.email || '');
+  var a = $('#annBar'); a.textContent = CONTENT.announce || ''; a.hidden = !CONTENT.announce;
+  MODES.collect.s = 'Sébénikoro · gratuit · réservé ' + (STORE.reservationHours || 48) + ' h';
+}
+function applySite(site) {
+  site = site || {};
+  Object.assign(STORE, site.store || {});
+  CONTENT = Object.assign({}, C.content || {}, site.content || {});
+  paintChrome();
+  if (S.view !== 'commande') route(true);
+}
+
 /* ================= DÉMARRAGE ================= */
 function boot() {
   $('#hsIc').innerHTML = ic('search', 18); $('#cartIc').innerHTML = ic('cart', 20);
@@ -966,9 +994,7 @@ function boot() {
   $('#cur').onchange = function () { S.cur = this.value; LS.set('ac_cur', S.cur); if (S.cur === 'USD') loadUsd(); route(true); };
   if (S.cur === 'USD') loadUsd();
   $('#hsearch').onsubmit = function (e) { e.preventDefault(); var v = $('#hsq').value.trim(); location.hash = '#/catalogue' + (v ? '?q=' + encodeURIComponent(v) : ''); };
-  $('#fAddr').textContent = STORE.address || ''; $('#fOpen').textContent = openState().txt;
-  $('#fTel').textContent = STORE.phone || ''; $('#fTel').href = telLink();
-  $('#fWa').href = waLink(); $('#fMail').textContent = STORE.email || ''; $('#fMail').href = 'mailto:' + (STORE.email || '');
+  paintChrome();
   $('#yr').textContent = new Date().getFullYear();
   $('#demoBar').hidden = !DEMO;
   var net = function () { $('#offBar').hidden = navigator.onLine; }; addEventListener('online', net); addEventListener('offline', net); net();
@@ -977,6 +1003,7 @@ function boot() {
   route();
 
   DB.init().then(function () {
+    DB.watchSite(applySite);
     DB.watchSettings(function (s) { S.settings = Object.assign({}, C.defaults, s || {}); if (S.view === 'commande' && $('#modeF')) { $('#modeF').innerHTML = modeFields(); $('#cosum').innerHTML = sumHTML(); } });
     DB.watchProducts(function (list) {
       S.products = list; S.loaded = true;
