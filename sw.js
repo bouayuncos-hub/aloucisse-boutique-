@@ -1,7 +1,7 @@
 /* Service worker — Alou Cissé
    Changez VERSION à chaque mise à jour du site pour forcer le rafraîchissement. */
-const VERSION = 'ac-v5';
-const SHELL = ['./', './index.html', './config.js', './demo-data.js', './manifest.json', './icon-192.png', './icon-512.png'];
+const VERSION = 'ac-v6';
+const SHELL = ['./', './index.html', './config.js', './demo-data.js', './manifest.json', './icon-192.png', './icon-512.png', './logo.webp', './logo.png', './favicon.png'];
 const LIBS = ['www.gstatic.com', 'cdnjs.cloudflare.com'];
 
 self.addEventListener('install', (e) => {

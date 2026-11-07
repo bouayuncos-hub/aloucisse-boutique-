@@ -7,9 +7,10 @@
 <meta name="description" content="Smartphones, ordinateurs, audio, objets connectés. Boutique à Sébénikoro, Bamako : retrait en magasin, livraison à Bamako et expédition internationale. Orange Money, Moov Money, carte, PayPal.">
 <meta name="theme-color" content="#f5f5f7" id="themeColor">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta property="og:title" content="Alou Cissé — Électronique & High-Tech">
+<meta property="og:image" content="logo.png">
 <meta property="og:description" content="Boutique high-tech à Sébénikoro, Bamako. Livraison Bamako & international.">
 <script>
   // Thème appliqué avant l'affichage (évite le flash)
@@ -74,6 +75,10 @@ h2{font-size:1.25rem;letter-spacing:-.01em;margin:0 0 .75rem}
 .ann{background:var(--gold);color:#000;font-size:.88rem;font-weight:600;text-align:center;padding:8px 12px}
 .demo{background:var(--gold-soft);color:var(--gold);font-size:.8rem;text-align:center;padding:5px 12px}
 main{min-height:60vh;padding:20px 0 40px}
+.logo .lg{width:42px;height:42px;border-radius:50%;flex:none;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.flogo{width:96px;height:96px;border-radius:50%;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.hlogo{display:none}
+@media(min-width:900px){.hlogo{display:block;position:absolute;right:64px;top:50%;transform:translateY(-50%);width:230px;height:230px;border-radius:50%;box-shadow:0 10px 40px rgba(0,0,0,.45);z-index:1}.hero:after{display:none}}
 /* Buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:999px;border:0;background:var(--ink);color:var(--ink-text);font-weight:600;cursor:pointer;white-space:nowrap;transition:transform .1s,opacity .2s}
 .btn:active{transform:scale(.98)}.btn[disabled]{opacity:.45;cursor:not-allowed}
@@ -237,7 +242,7 @@ footer a{display:block;padding:3px 0}
 <body>
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="#/" aria-label="Alou Cissé — accueil"><b>AC</b><span><span id="lgName">Alou Cissé</span><small id="lgTag">Électronique & High-Tech</small></span></a>
+    <a class="logo" href="#/" aria-label="Alou Cissé — accueil"><img class="lg" src="logo.webp" alt="" width="42" height="42" decoding="async"><span><span id="lgName">Alou Cissé</span><small id="lgTag">Électronique & High-Tech</small></span></a>
     <nav class="hnav" aria-label="Navigation principale">
       <a href="#/catalogue" data-nav="catalogue">Catalogue</a>
       <a href="#/boutique" data-nav="boutique">La boutique</a>
@@ -266,7 +271,7 @@ footer a{display:block;padding:3px 0}
 
 <footer>
   <div class="wrap cols">
-    <div><b id="fName"></b><br><span id="fAddr"></span><br><span id="fOpen"></span><br><br><span id="fText"></span></div>
+    <div><img class="flogo" src="logo.webp" alt="Logo Alou Boutique" width="96" height="96" loading="lazy"><br><b id="fName"></b><br><span id="fAddr"></span><br><span id="fOpen"></span><br><br><span id="fText"></span></div>
     <div><b>Boutique</b><a href="#/catalogue">Catalogue</a><a href="#/boutique">Horaires & plan</a><a href="#/suivi">Suivre une commande</a><a href="#/favoris">♥ Mes favoris</a><a href="#" id="instBtn" hidden>📲 Installer l’application</a><a href="admin.html">🔒 Espace administrateur</a></div>
     <div><b>Contact</b><a id="fTel" href="#"></a><a id="fTel2" href="#"></a><a id="fWa" href="#" target="_blank" rel="noopener">WhatsApp</a><a id="fMail" href="#"></a></div>
   </div>
@@ -607,7 +612,7 @@ function vHome() {
   if (feat.length < 4) feat = S.products.slice(0, 8);
   var os = openState();
   var pic = ['truck', 'store', 'phoneM', 'globe'];
-  return '<section class="hero"><div class="kicker">' + esc(CONTENT.kicker) + '</div>' +
+  return '<section class="hero"><img class="hlogo" src="logo.webp" alt="" width="230" height="230"><div class="kicker">' + esc(CONTENT.kicker) + '</div>' +
     '<h1>' + esc(CONTENT.title) + '</h1>' +
     '<p>' + esc(CONTENT.text) + '</p>' +
     '<div class="row"><a class="btn gold" href="#/catalogue">' + esc(CONTENT.cta1 || 'Voir le catalogue') + '</a><a class="btn ghost" href="#/boutique">' + ic('store', 18) + esc(CONTENT.cta2 || 'Click & Collect') + '</a></div></section>' +
