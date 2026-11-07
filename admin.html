@@ -98,7 +98,8 @@ table.t td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:to
       <div id="lmailBox" hidden><label class="f" for="lmail">E-mail du compte</label><input class="in" id="lmail" type="email" autocomplete="username"></div>
       <label class="f" for="lpass">Mot de passe administrateur</label><input class="in" id="lpass" type="password" autocomplete="current-password" required>
       <button class="btn" style="width:100%;margin-top:14px">Se connecter</button>
-      <p class="small" style="margin:10px 0 0"><a href="#" id="lother">Autre compte administrateur</a></p>
+      <p class="small" style="margin:10px 0 0"><a href="#" id="lforgot">Mot de passe oublié ?</a> · <a href="#" id="lother">Autre compte administrateur</a></p>
+      <div id="lhelp" class="small" hidden style="margin-top:10px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px 12px"></div>
       <p id="lerr" class="small" style="color:var(--danger)"></p>
     </form>
   </div>
@@ -117,6 +118,7 @@ table.t td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:to
       <button data-t="settings">Réglages</button>
     </nav>
     <a class="btn ghost sm" href="index.html" target="_blank">Voir la boutique</a>
+    <button class="btn ghost sm" id="acctBtn">🔑 Mon mot de passe</button>
     <button class="btn ghost sm" id="logout">Déconnexion</button>
   </div></header>
   <main class="wrap" id="view"></main>
@@ -360,6 +362,14 @@ function vDash() {
   var low = D.products.filter(function (p) { return p.active !== false && (+p.stock || 0) <= 2; }).sort(function (a, b) { return a.stock - b.stock; });
   var byMode = {}; month.forEach(function (o) { byMode[o.delivery.mode] = (byMode[o.delivery.mode] || 0) + 1; });
   return '<h1>Tableau de bord</h1>' +
+    '<div class="box"><h2>Actions rapides</h2><div class="bar" style="margin:0">' +
+    '<button class="btn gold" data-go="newp">+ Publier un produit</button>' +
+    '<button class="btn ghost" data-go="products">Modifier les produits & prix</button>' +
+    '<button class="btn ghost" data-go="promos">Lancer une promotion</button>' +
+    '<button class="btn ghost" data-go="site">Modifier le contenu du site</button>' +
+    '<button class="btn ghost" data-go="pos">Vente comptoir</button>' +
+    '<button class="btn ghost" data-go="pw">🔑 Mon mot de passe</button></div>' +
+    (D.site && D.site.content && D.site.content.closed ? '<p class="small" style="color:var(--danger);margin:10px 0 0"><b>⚠️ Commandes en ligne suspendues</b> — réactivez-les dans Contenu du site.</p>' : '') + '</div>' +
     (!D.products.length ? '<div class="box"><b>Catalogue vide.</b> <button class="btn sm gold" id="seedBtn">Importer les ' + (window.AC_SEED || []).length + ' produits de démonstration</button></div>' : '') +
     '<div class="kpis"><div class="kpi"><span>Commandes aujourd’hui</span><b>' + today.length + '</b></div><div class="kpi"><span>CA aujourd’hui</span><b>' + fcfa(sum(today)) + '</b></div>' +
     '<div class="kpi"><span>CA 30 jours</span><b>' + fcfa(sum(month)) + '</b></div><div class="kpi"><span>Panier moyen (30 j)</span><b>' + fcfa(month.length ? sum(month) / month.length : 0) + '</b></div></div>' +
@@ -402,7 +412,7 @@ function renderProducts() {
     var s = +p.stock || 0;
     return '<div class="prod"><img src="' + esc(p.thumb || '') + '" alt="" onerror="this.style.visibility=\'hidden\'"><div><div class="n">' + esc(p.name) + '</div><div class="small muted">' + esc(CATS[p.cat] || p.cat) +
       (promoOn(p) ? ' · ' + pill('ok', 'Promo ' + fcfa(p.promoPrice)) : '') + (p.active === false ? ' · ' + pill('bad', 'Brouillon — non publié') : '') + (p.featured ? ' · ' + pill('gold', 'À la une') : '') + '</div></div>' +
-      '<div style="display:flex;gap:8px;align-items:center"><label class="stock">Prix <input type="number" min="1" step="1" class="price" value="' + (+p.price || 0) + '" data-price="' + esc(p.id) + '"></label><label class="stock">Stock <input type="number" min="0" step="1" value="' + s + '" data-stock="' + esc(p.id) + '" class="' + (s <= 0 ? 'out' : s <= 2 ? 'low' : '') + '"></label><button class="btn ghost sm" data-edit="' + esc(p.id) + '">Modifier</button></div></div>';
+      '<div style="display:flex;gap:8px;align-items:center"><label class="stock">Prix <input type="number" min="1" step="1" class="price" value="' + (+p.price || 0) + '" data-price="' + esc(p.id) + '"></label><label class="stock">Stock <input type="number" min="0" step="1" value="' + s + '" data-stock="' + esc(p.id) + '" class="' + (s <= 0 ? 'out' : s <= 2 ? 'low' : '') + '"></label><button class="btn sm ' + (p.active === false ? 'ok' : 'ghost') + '" data-pub="' + esc(p.id) + '">' + (p.active === false ? 'Publier' : 'Retirer') + '</button><button class="btn ghost sm" data-edit="' + esc(p.id) + '">Modifier</button></div></div>';
   }).join('') || '<div class="empty">Aucun produit.</div>';
 }
 function lines(arr) { return (arr || []).map(function (z) { return z.name + ' = ' + z.fee; }).join('\n'); }
@@ -417,9 +427,7 @@ function vSettings() {
     '<div><label class="f" for="sRelays">Points relais</label><textarea class="in" id="sRelays" rows="4">' + esc(lines(s.relays)) + '</textarea><label class="f" for="sIntl">Zones internationales</label><textarea class="in" id="sIntl" rows="5">' + esc(lines(s.intlZones)) + '</textarea></div></div>' +
     '<button class="btn" style="margin-top:14px">Enregistrer les réglages</button></form>' +
     '<div class="box"><h2>Boutique</h2><p class="small">Adresse, téléphone, WhatsApp, numéros Orange/Moov Money et horaires se modifient dans <b>config.js</b>.</p><p class="small">' + esc(STORE.address) + ' · ' + esc(STORE.phone) + ' · OM ' + esc(STORE.orangeMoney) + ' · Moov ' + esc(STORE.moovMoney) + '</p></div>' +
-    '<div class="box"><h2>Sécurité — mot de passe administrateur</h2><form id="pwForm"><div class="g3"><div><label class="f" for="pwOld">Mot de passe actuel</label><input class="in" id="pwOld" type="password" autocomplete="current-password" required></div>' +
-    '<div><label class="f" for="pwNew">Nouveau (8 caractères min.)</label><input class="in" id="pwNew" type="password" autocomplete="new-password" minlength="8" required></div><div><label class="f" for="pwNew2">Confirmer</label><input class="in" id="pwNew2" type="password" autocomplete="new-password" required></div></div>' +
-    '<button class="btn" style="margin-top:12px">Changer le mot de passe</button></form></div>' +
+    '<div class="box"><h2>Sécurité — mot de passe administrateur</h2><p class="small muted">Connecté : <b>' + esc(me.email) + '</b></p><button class="btn" id="acctBtn2">🔑 Changer mon mot de passe</button></div>' +
     '<div class="box"><h2>Journal d’audit</h2><div id="audit" class="small muted">Chargement…</div></div>';
 }
 function loadAudit() {
@@ -495,6 +503,8 @@ function hoursText(h, d) { return (h || []).filter(function (x) { return x.d ===
 function vSite() {
   var x = siteData(), st = x.store, c = x.content, perks = c.perks || [];
   return '<h1>Contenu du site</h1><p class="small muted">Chaque modification est visible immédiatement sur la boutique, sans redéploiement. Les produits se publient dans l’onglet Produits.</p><form id="siteForm">' +
+    '<div class="box"><h2>Contrôle de la boutique</h2><label class="chk" style="margin-top:0"><input type="checkbox" data-g="content" data-k="closed"' + (c.closed ? ' checked' : '') + '> <b>Suspendre les commandes en ligne</b> (le catalogue reste visible)</label>' +
+    inp('content', 'closedMsg', 'Message affiché pendant la suspension', c.closedMsg, 'text', 'Ex. Fermé pour inventaire jusqu’à lundi. Appelez-nous au +223 77 91 91 44.') + '</div>' +
     '<div class="box"><h2>Bandeau d’annonce</h2>' + inp('content', 'announce', 'Message affiché en haut du site (vide = masqué)', c.announce, 'text', 'Ex. −10 % sur les écouteurs jusqu’au 30 novembre') + '</div>' +
     '<div class="box"><h2>Identité</h2><div class="g2">' + inp('store', 'name', 'Nom de la boutique', st.name) + inp('store', 'tagline', 'Slogan', st.tagline) + '</div></div>' +
     '<div class="box"><h2>Page d’accueil</h2>' + inp('content', 'kicker', 'Surtitre', c.kicker) + inp('content', 'title', 'Titre principal', c.title) + area('content', 'text', 'Texte de présentation', c.text, 3) +
@@ -513,7 +523,7 @@ function vSite() {
 }
 function collectSite() {
   var out = { store: {}, content: {} }, err = '';
-  $$('#siteForm [data-g]').forEach(function (el) { var v = el.value.trim(); out[el.dataset.g][el.dataset.k] = el.type === 'number' ? (v === '' ? null : parseFloat(v)) : v; });
+  $$('#siteForm [data-g]').forEach(function (el) { if (el.type === 'checkbox') { out[el.dataset.g][el.dataset.k] = el.checked; return; } var v = el.value.trim(); out[el.dataset.g][el.dataset.k] = el.type === 'number' ? (v === '' ? null : parseFloat(v)) : v; });
   out.store.whatsapp = digits(out.store.whatsapp);
   out.content.perks = [0, 1, 2, 3].map(function (i) { return { t: $('[data-perk="' + i + '"][data-pk="t"]').value.trim(), d: $('[data-perk="' + i + '"][data-pk="d"]').value.trim() }; });
   out.store.hours = [];
@@ -530,6 +540,16 @@ function collectSite() {
   if (out.store.lat == null || out.store.lng == null || isNaN(out.store.lat) || isNaN(out.store.lng)) err = 'Latitude et longitude sont obligatoires';
   if (!out.store.name) err = 'Le nom de la boutique est obligatoire';
   return { err: err, site: out };
+}
+
+function accountDlg() {
+  openDlg('Mon mot de passe', '<p class="small muted">Compte : <b>' + esc(me.email) + '</b>. Choisissez un mot de passe personnel d’au moins 8 caractères (lettres, chiffres et symboles).</p>' +
+    '<form id="pwForm"><label class="f" for="pwOld">Mot de passe actuel</label><input class="in" id="pwOld" type="password" autocomplete="current-password" required>' +
+    '<label class="f" for="pwNew">Nouveau mot de passe</label><input class="in" id="pwNew" type="password" autocomplete="new-password" minlength="8" required>' +
+    '<label class="f" for="pwNew2">Confirmer le nouveau mot de passe</label><input class="in" id="pwNew2" type="password" autocomplete="new-password" required>' +
+    '<label class="chk"><input type="checkbox" id="pwShow"> Afficher les mots de passe</label>' +
+    '<button class="btn gold" style="margin-top:14px;width:100%">Enregistrer le nouveau mot de passe</button></form>');
+  $('#pwShow').onchange = function () { var t = this.checked ? 'text' : 'password'; ['#pwOld', '#pwNew', '#pwNew2'].forEach(function (i) { $(i).type = t; }); };
 }
 
 /* ============ Fenêtres ============ */
@@ -618,8 +638,23 @@ function csv() {
 
 /* ============ Événements ============ */
 document.addEventListener('click', function (e) {
-  var t = e.target.closest('[data-t],[data-o],[data-edit],[data-act],[data-qpay],[data-prstop],[data-cptoggle],[data-cpdel],[data-posrm],#prApply,#prClear,#bpApply,#posAdd,#posSave,#newP,#seedBtn,#dlgX,#logout,#csvBtn'); if (!t) return;
+  var t = e.target.closest('[data-t],[data-o],[data-edit],[data-act],[data-qpay],[data-prstop],[data-cptoggle],[data-cpdel],[data-posrm],#prApply,#prClear,#bpApply,#posAdd,#posSave,#newP,#seedBtn,#dlgX,#logout,#csvBtn,#acctBtn,#acctBtn2,[data-go],[data-pub]'); if (!t) return;
   var err = function (x) { toast('Erreur : ' + x.message); };
+  if (t.id === 'acctBtn' || t.id === 'acctBtn2') { accountDlg(); return; }
+  if (t.dataset.go) {
+    var g = t.dataset.go;
+    if (g === 'pw') { accountDlg(); return; }
+    cur = g === 'newp' ? 'products' : g; $('#view').innerHTML = ''; render();
+    if (g === 'newp') productForm(null);
+    return;
+  }
+  if (t.dataset.pub) {
+    var pb = D.products.filter(function (x) { return x.id === t.dataset.pub; })[0]; if (!pb) return;
+    var nowOn = pb.active === false;
+    ADB.bulk([{ id: pb.id, patch: { active: nowOn } }], nowOn ? 'produit_publie' : 'produit_retire', pb.name)
+      .then(function () { toast(nowOn ? 'Publié sur la boutique : ' + pb.name : 'Retiré de la boutique : ' + pb.name); }).catch(err);
+    return;
+  }
   if (t.dataset.qpay) { var qo = findOrder(t.dataset.qpay); if (qo) ADB.updateOrder(qo, { paymentStatus: 'paye' }, 'paiement', 'À vérifier → Payé (' + (PAYM[qo.payment.method] || '') + ' réf. ' + (qo.payment.ref || '—') + ')').then(function () { toast('Paiement confirmé : ' + qo.code); render(); }).catch(err); return; }
   if (t.id === 'prApply' || t.id === 'prClear') {
     var cat = $('#prCat').value, list = inCat(cat), lbl = cat ? CATS[cat] : 'tout le catalogue';
@@ -726,7 +761,7 @@ document.addEventListener('submit', function (e) {
     e.preventDefault(); var o = $('#pwOld').value, n = $('#pwNew').value;
     if (n.length < 8) { toast('Le nouveau mot de passe doit faire au moins 8 caractères'); return; }
     if (n !== $('#pwNew2').value) { toast('La confirmation ne correspond pas'); return; }
-    ADB.changePassword(o, n).then(function () { toast('Mot de passe modifié'); e.target.reset(); }).catch(function (x) { toast(/recent|requires-recent/.test(x.code || '') ? 'Reconnectez-vous puis réessayez' : x.message); });
+    ADB.changePassword(o, n).then(function () { toast('Mot de passe modifié ✓'); closeDlg(); }).catch(function (x) { toast(/recent|requires-recent/.test(x.code || '') ? 'Reconnectez-vous puis réessayez' : x.message); });
     return;
   }
   if (e.target.id !== 'setForm') return; e.preventDefault();
@@ -740,6 +775,19 @@ function start() { $('#login').hidden = true; $('#adm').hidden = false; ADB.watc
 function showLogin() { $('#adm').hidden = true; $('#login').hidden = false; setTimeout(function () { $('#lpass').focus(); }, 50); }
 $('#lmail').value = C.adminEmail || '';
 if (!C.adminEmail) $('#lmailBox').hidden = false;
+$('#lforgot').onclick = function (e) {
+  e.preventDefault(); var h = $('#lhelp'); h.hidden = false;
+  if (DEMO) {
+    h.innerHTML = 'Mode démo : <button type="button" class="btn sm" id="ldemoReset">Rétablir le mot de passe « alou2026 »</button>';
+    $('#ldemoReset').onclick = function () { try { localStorage.removeItem('ac_demo_pass'); } catch (x) {} h.innerHTML = '✅ Mot de passe rétabli : <b>alou2026</b>'; $('#lpass').value = ''; $('#lpass').focus(); };
+    return;
+  }
+  h.innerHTML = '<b>Rétablir le mot de passe « alou2026 »</b> (vos produits et commandes sont conservés) :<ol style="margin:6px 0 0;padding-left:18px">' +
+    '<li>console.firebase.google.com → projet <b>' + esc(C.firebase.projectId) + '</b></li>' +
+    '<li><b>Authentication → Utilisateurs</b> : sur la ligne <b>' + esc(C.adminEmail) + '</b>, menu ⋮ → <b>Supprimer le compte</b></li>' +
+    '<li><b>Firestore Database</b> → collection <b>settings</b> → document <b>owner</b> → menu ⋮ → <b>Supprimer le document</b></li>' +
+    '<li>Revenez ici et connectez-vous avec <b>alou2026</b> : le compte est recréé automatiquement.</li></ol>';
+};
 $('#lother').onclick = function (e) { e.preventDefault(); $('#lmailBox').hidden = false; $('#lmail').focus(); };
 ADB.init().then(function () {
   if (DEMO) {
@@ -758,18 +806,34 @@ ADB.init().then(function () {
   }
   auth.onAuthStateChanged(function (u) {
     if (!u) { showLogin(); return; }
-    db.doc('admins/' + u.uid).get().then(function (d) {
-      if (!d.exists) { $('#lerr').textContent = 'Ce compte n’est pas autorisé (UID : ' + u.uid + '). Ajoutez-le dans la collection « admins ».'; auth.signOut(); return; }
-      me = { email: u.email, uid: u.uid }; start();
-    }).catch(function (e) { $('#lerr').textContent = 'Accès refusé : ' + e.message; showLogin(); });
+    var ownerRef = db.doc('settings/owner');
+    Promise.all([db.doc('admins/' + u.uid).get(), ownerRef.get()]).then(function (r) {
+      if (r[0].exists || (r[1].exists && r[1].data().uid === u.uid)) return true;
+      if (!r[1].exists && u.email === C.adminEmail) return ownerRef.set({ uid: u.uid, email: u.email, at: Date.now() }).then(function () { return true; });
+      return false;
+    }).then(function (ok) {
+      if (!ok) { $('#lerr').textContent = 'Ce compte n’est pas autorisé. Voir « Mot de passe oublié ? ».'; auth.signOut(); return; }
+      me = { email: u.email, uid: u.uid }; start(); ADB.log('connexion', u.email, 'Connexion');
+    }).catch(function (e) { $('#lerr').textContent = /permission/i.test(e.code || e.message) ? 'Accès refusé : publiez d’abord le fichier firestore.rules dans Firebase.' : 'Erreur : ' + e.message; showLogin(); });
   });
   $('#lform').onsubmit = function (e) {
     e.preventDefault(); $('#lerr').textContent = '';
-    var mail = ($('#lmail').value || C.adminEmail || '').trim();
+    var mail = ($('#lmail').value || C.adminEmail || '').trim(), pw = $('#lpass').value, btn = $('#lform button');
     if (!mail) { $('#lmailBox').hidden = false; $('#lerr').textContent = 'Indiquez l’e-mail du compte.'; return; }
-    auth.signInWithEmailAndPassword(mail, $('#lpass').value).catch(function (x) {
-      $('#lerr').textContent = /invalid|wrong|not-found|credential/i.test(x.code || '') ? 'Mot de passe incorrect.' : /too-many/.test(x.code || '') ? 'Trop de tentatives, réessayez plus tard.' : x.message;
-    });
+    btn.disabled = true;
+    auth.signInWithEmailAndPassword(mail, pw).catch(function (x) {
+      // Première connexion : le compte n'existe pas encore → créé avec le mot de passe initial (alou2026)
+      if (mail !== C.adminEmail || !/not-found|invalid-credential|invalid-login/i.test(x.code || '')) throw x;
+      return sha256(pw).then(function (h) {
+        if (h !== C.demoPasswordHash) throw x;
+        return auth.createUserWithEmailAndPassword(mail, pw).catch(function (y) { throw (y.code === 'auth/email-already-in-use' ? x : y); });
+      });
+    }).catch(function (x) {
+      var c = x.code || '';
+      $('#lerr').textContent = /operation-not-allowed/.test(c) ? 'Activez « E-mail/Mot de passe » dans Firebase > Authentication > Sign-in method.' :
+        /unauthorized-domain/.test(c) ? 'Ajoutez l’adresse du site dans Firebase > Authentication > Paramètres > Domaines autorisés.' :
+        /invalid|wrong|not-found|credential/i.test(c) ? 'Mot de passe incorrect.' : /too-many/.test(c) ? 'Trop de tentatives, réessayez dans quelques minutes.' : x.message;
+    }).then(function () { btn.disabled = false; });
   };
 }).catch(function () { document.body.innerHTML = '<p style="padding:30px">Impossible de charger Firebase. Vérifiez votre connexion et config.js.</p>'; });
 })();

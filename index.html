@@ -914,6 +914,7 @@ function validate() {
   return '';
 }
 function placeOrder(btn) {
+  if (CONTENT.closed) { toast(CONTENT.closedMsg || 'Les commandes en ligne sont temporairement suspendues.'); return; }
   var err = validate(); if (err) { toast(err); return; }
   if (!DEMO && !navigator.onLine) { toast('Connexion internet requise pour valider la commande'); return; }
   var lines = cartLines(), sub = subtotal(), sh = shipping(sub), dsc = discount(sub), now = Date.now(), total = sub - dsc + sh;
@@ -1153,7 +1154,8 @@ function paintChrome() {
   $('#fTel2').textContent = STORE.phone2 || ''; $('#fTel2').href = telLink(STORE.phone2); $('#fTel2').hidden = !STORE.phone2;
   $('#fab').href = waLink('Bonjour Alou Cissé, '); $('#fab').innerHTML = ic('chat', 26);
   $('#fWa').href = waLink(); $('#fMail').textContent = STORE.email || ''; $('#fMail').href = 'mailto:' + (STORE.email || '');
-  var a = $('#annBar'); a.textContent = CONTENT.announce || ''; a.hidden = !CONTENT.announce;
+  var msg = CONTENT.closed ? (CONTENT.closedMsg || 'Les commandes en ligne sont temporairement suspendues. Contactez-nous par téléphone ou WhatsApp.') : CONTENT.announce;
+  var a = $('#annBar'); a.textContent = msg || ''; a.hidden = !msg;
   MODES.collect.s = 'Sébénikoro · gratuit · réservé ' + (STORE.reservationHours || 48) + ' h';
 }
 function applySite(site) {

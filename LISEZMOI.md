@@ -49,6 +49,15 @@ Sur GitHub, ouvrez `config.js` → icône crayon ✏️ :
 **Commit changes** → Vercel redéploie en ~30 s. Le bandeau « Mode démonstration » disparaît.
 
 ## Étape 4 bis — Le compte administrateur et le mot de passe
+
+> **Version 7 — plus simple :** inutile de créer le compte à la main. Une fois la base Firestore créée, `firestore.rules` publié et « E-mail/Mot de passe » activé, ouvrez `/admin.html` et tapez **`alou2026`** : le compte administrateur (`adminEmail` de `config.js`) est créé et autorisé automatiquement à la première connexion. Faites-le **juste après la mise en ligne**.
+>
+> **Changer son mot de passe personnel** : bouton **🔑 Mon mot de passe** en haut de l'administration.
+>
+> **Mot de passe oublié → revenir à `alou2026`** : lien « Mot de passe oublié ? » sur l'écran de connexion. En résumé : dans la console Firebase, supprimez l'utilisateur dans Authentication, puis le document `settings/owner` dans Firestore. Reconnectez-vous ensuite avec `alou2026`. Produits et commandes sont conservés.
+>
+> **Contrôle du site** : Contenu du site → « Suspendre les commandes en ligne » (inventaire, congés…). Le catalogue reste visible et un message s'affiche.
+
 - **Mode démo** : ouvrez `/admin.html`, mot de passe **`alou2026`**. Seule son empreinte chiffrée figure dans `config.js`.
 - **Production (Firebase)** : à l'étape 3.5, créez l'utilisateur avec l'e-mail indiqué dans `adminEmail` de `config.js` et le mot de passe **`alou2026`**. L'écran de connexion ne demande que le mot de passe (lien « Autre compte administrateur » pour un gérant).
 - ⚠️ `alou2026` est court et a été partagé : **changez-le dès la mise en ligne** dans **Réglages → Sécurité** (8 caractères minimum, mélangez lettres, chiffres et symboles).
