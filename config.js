@@ -6,12 +6,12 @@
    ===================================================================== */
 window.AC_CONFIG = {
   firebase: {
-    apiKey: "",
-    authDomain: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
+    apiKey: "AIzaSyCf2xFyazz_zNFywlx7_-9173cELDuTsBw",
+    authDomain: "alouboutique.firebaseapp.com",
+    projectId: "alouboutique",
+    storageBucket: "alouboutique.firebasestorage.app",
+    messagingSenderId: "462406730563",
+    appId: "1:462406730563:web:3a2fb5fbda11334a7ea5f6"
   },
 
   // Identifiant client PayPal (LIVE ou SANDBOX) — developer.paypal.com
