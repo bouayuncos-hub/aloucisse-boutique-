@@ -13,6 +13,7 @@ Boutique PWA HTML/CSS/JS + Firebase, déployée gratuitement sur Vercel.
 | `demo-data.js` | Catalogue de démonstration (14 produits) |
 | `sw.js`, `manifest.json`, `icon-*.png` | Application installable + catalogue consultable hors-ligne |
 | `firestore.rules` | Règles de sécurité à coller dans Firebase |
+| `storage.rules` | Règles pour les vidéos (Firebase Storage) |
 | `vercel.json` | En-têtes de cache et de sécurité |
 
 ## Étape 0 — Tester tout de suite (mode démo)
@@ -104,6 +105,19 @@ Sur Android (Chrome) : menu ⋮ → **Installer l'application**. Sur iPhone (Saf
 - **Tableau de bord** : bouton **✓ Payé** à côté de chaque paiement Orange Money / Moov à vérifier. Contrôlez d'abord le SMS reçu sur le téléphone marchand.
 
 ⚠️ Après la mise à jour, **republiez `firestore.rules`** dans Firebase : les codes promo, l'envoi de la référence de paiement et les ventes comptoir en dépendent.
+
+## Nouveautés v8 — photos, vidéos, suppression rapide
+
+**Photos (sans URL)** : dans la fiche produit, utilisez **📷 Prendre une photo** (appareil photo du téléphone) ou **🖼️ Choisir dans la galerie** (plusieurs à la fois). Vous pouvez mettre jusqu'à 6 photos. Elles sont compressées automatiquement et ne demandent aucun réglage Firebase en plus. Les boutons **✕** suppriment une photo, et **Mettre en principale** choisit celle qui s'affiche dans le catalogue.
+
+**Vidéos** : **🎥 Filmer une vidéo** ou **🎞️ Choisir une vidéo**, jusqu'à 3 par produit, de 60 Mo maximum chacune. Elles sont envoyées en cliquant sur Enregistrer, avec une barre de progression. **✕ Supprimer** retire une vidéo. Côté client, la vidéo ne se charge que s'il appuie sur « ▶ Voir la vidéo », pour économiser ses données.
+Les vidéos utilisent **Firebase Storage** :
+1. Console Firebase → **Storage → Commencer**. Pour les projets récents, Storage demande le **forfait Blaze**, qui exige une carte bancaire mais garde un quota gratuit.
+2. Onglet **Règles** : collez le contenu de `storage.rules` → **Publier**. Acceptez l'autorisation pour que Storage puisse lire Firestore.
+
+Sans Storage, les photos fonctionnent quand même ; seul l'envoi de vidéos affiche un message.
+
+**Supprimer les produits invendus en 3 gestes** : Produits → filtre **« Invendus depuis 30/60/90 jours »** → cochez les produits, ou **Tout sélectionner** → **🗑 Supprimer la sélection**. Une seule confirmation suffit, et les photos et vidéos sont supprimées avec les produits. Vous pouvez aussi utiliser **Retirer de la vente** pour les masquer sans les supprimer. Chaque produit affiche son nombre de ventes et la date de sa dernière vente.
 
 ## Fonctionnement au quotidien
 

@@ -224,6 +224,14 @@ footer a{display:block;padding:3px 0}
 .fav{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:999px;border:0;background:rgba(255,255,255,.92);color:#1d1d1f;display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 .fav.on,.btn.on{color:#e0245e}.fav.on svg,.btn.on svg{fill:currentColor}
 .tag2{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.78);color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:999px}
+.thumbs{display:flex;gap:8px;padding:10px;overflow-x:auto}
+.thumbs:empty{display:none}
+.thumbs img{width:64px;height:64px;flex:none;border-radius:10px;object-fit:cover;cursor:pointer;border:2px solid transparent;aspect-ratio:auto}
+.thumbs img.on{border-color:var(--gold)}
+.pd .gal .thumbs img{width:64px;height:64px;aspect-ratio:auto}
+.pvids{padding:0 10px 10px;display:grid;gap:8px}
+.pvids video{width:100%;max-height:420px;border-radius:12px;background:#000}
+.tagv{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.78);color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:999px}
 .promo-l{display:inline-flex;align-items:center;gap:6px;background:var(--danger-soft);color:var(--danger);font-weight:600;font-size:.88rem;padding:6px 12px;border-radius:999px;margin:8px 0 0}
 .fab{position:fixed;right:16px;bottom:calc(78px + env(safe-area-inset-bottom));z-index:19;width:54px;height:54px;border-radius:999px;background:#1fae5b;color:#fff;display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 @media(min-width:900px){.fab{bottom:24px}}
@@ -429,6 +437,14 @@ function stockInfo(p) {
 }
 
 /* ================= COUCHE DONNÉES (démo ou Firebase) ================= */
+var IDB = {
+  open: function () { return new Promise(function (res, rej) { var r = indexedDB.open('ac_media', 1); r.onupgradeneeded = function () { r.result.createObjectStore('v'); }; r.onsuccess = function () { res(r.result); }; r.onerror = function () { rej(r.error); }; }); },
+  run: function (mode, fn) { return IDB.open().then(function (d) { return new Promise(function (res, rej) { var t = d.transaction('v', mode), q = fn(t.objectStore('v')); t.oncomplete = function () { res(q && q.result); }; t.onerror = function () { rej(t.error); }; }); }); },
+  put: function (k, v) { return IDB.run('readwrite', function (s) { s.put(v, k); }); },
+  get: function (k) { return IDB.run('readonly', function (s) { return s.get(k); }); },
+  del: function (k) { return IDB.run('readwrite', function (s) { s.delete(k); }); }
+};
+
 var db = null;
 var DB = {
   init: function () {
@@ -486,10 +502,10 @@ var DB = {
     if (DEMO) { var o = LS.get('ac_demo_orders', {}); if (o[code]) { o[code].payment.ref = ref; o[code].paymentStatus = 'a_verifier'; LS.set('ac_demo_orders', o); } return Promise.resolve(); }
     return db.collection('orders').doc(code).update({ 'payment.ref': ref, paymentStatus: 'a_verifier' });
   },
-  getImage: function (id) {
-    if (DEMO) return Promise.resolve(LS.get('ac_demo_img_' + id, null));
-    if (!db) return Promise.resolve(null);
-    return db.doc('productImages/' + id).get().then(function (d) { return d.exists ? d.data().full : null; }).catch(function () { return null; });
+  getPhotos: function (id) {
+    if (DEMO) { var a = LS.get('ac_demo_imgs_' + id, null); if (a) return Promise.resolve(a); var f = LS.get('ac_demo_img_' + id, null); return Promise.resolve(f ? [f] : []); }
+    if (!db) return Promise.resolve([]);
+    return db.doc('productImages/' + id).get().then(function (d) { if (!d.exists) return []; var x = d.data(); return x.photos || (x.full ? [x.full] : []); }).catch(function () { return []; });
   },
   placeOrder: function (order) {
     if (DEMO) {
@@ -599,7 +615,7 @@ function telLink(n) { return 'tel:' + String(n || STORE.phone || '').replace(/\s
 function card(p) {
   var si = stockInfo(p), w = wasPrice(p), f = isFav(p.id), u = '#/produit/' + encodeURIComponent(p.id);
   return '<div class="pc"><a href="' + u + '"><div class="pimg"><img src="' + esc(img(p)) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async" width="200" height="180">' +
-    (w ? '<span class="tag">-' + pct(p) + '%</span>' : '') + (promoOn(p) && +p.promoEnd ? '<span class="tag2">⏱ <span class="cd" data-end="' + (+p.promoEnd) + '">' + left(p.promoEnd) + '</span></span>' : '') + '</div></a>' +
+    (w ? '<span class="tag">-' + pct(p) + '%</span>' : '') + ((p.videos || []).length ? '<span class="tagv">▶ Vidéo</span>' : '') + (promoOn(p) && +p.promoEnd ? '<span class="tag2">⏱ <span class="cd" data-end="' + (+p.promoEnd) + '">' + left(p.promoEnd) + '</span></span>' : '') + '</div></a>' +
     '<button class="fav' + (f ? ' on' : '') + '" data-fav="' + esc(p.id) + '" aria-pressed="' + f + '" aria-label="Favori : ' + esc(p.name) + '">' + ic('heart', 18) + '</button>' +
     '<div class="pb"><div class="brand">' + esc(p.brand) + '</div><a class="pn" href="' + u + '">' + esc(p.name) + '</a>' +
     '<div class="pp">' + money(eff(p)) + (w ? '<s>' + money(w) + '</s>' : '') + '</div>' +
@@ -628,6 +644,20 @@ function vHome() {
     '<div class="row"><a class="btn sm ghost" href="#/boutique">' + ic('pin', 18) + 'Plan & horaires</a><a class="btn sm wa" href="' + waLink('Bonjour Alou Cissé, ') + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'WhatsApp</a></div></div></div>';
 }
 
+function vidsHTML(p) {
+  var v = p.videos || []; if (!v.length) return '';
+  return '<div class="pvids">' + v.map(function (x, k) {
+    return '<button class="btn ghost block" data-vplay="' + k + '" data-pid="' + esc(p.id) + '">▶ Voir la vidéo' + (v.length > 1 ? ' ' + (k + 1) : '') + (x.size ? ' <span class="small muted">(' + (x.size / 1048576).toFixed(1) + ' Mo)</span>' : '') + '</button>';
+  }).join('') + '</div>';
+}
+function loadGallery(p) {
+  DB.getPhotos(p.id).then(function (ph) {
+    var im = $('#pdimg'), th = $('#pdthumbs'); if (!im || !ph.length) return;
+    im.src = ph[0];
+    if (ph.length > 1) th.innerHTML = ph.map(function (src, k) { return '<img src="' + src + '" alt="Photo ' + (k + 1) + '" data-ph="' + k + '"' + (k === 0 ? ' class="on"' : '') + '>'; }).join('');
+    th.onclick = function (e) { var t = e.target.closest('[data-ph]'); if (!t) return; im.src = ph[+t.dataset.ph]; $$('img', th).forEach(function (x) { x.classList.toggle('on', x === t); }); };
+  });
+}
 function flashHTML() {
   var fl = S.products.filter(promoOn).sort(function (a, b) { return pct(b) - pct(a); }).slice(0, 8);
   if (!fl.length) return '';
@@ -703,7 +733,7 @@ function vProduct(id) {
     Object.keys(p.specs).map(function (k) { return '<tr><td>' + esc(k) + '</td><td>' + esc(p.specs[k]) + '</td></tr>'; }).join('') + '</table>' : '';
   var rel = S.products.filter(function (x) { return x.cat === p.cat && x.id !== p.id; }).slice(0, 4);
   return '<div class="crumb"><a href="#/catalogue">Catalogue</a> › <a href="#/catalogue?cat=' + esc(p.cat) + '">' + esc(catName(p.cat)) + '</a></div>' +
-    '<div class="pd"><div class="gal"><img id="pdimg" src="' + esc(img(p)) + '" alt="' + esc(p.name) + '" width="600" height="600"></div><div>' +
+    '<div class="pd"><div class="gal"><img id="pdimg" src="' + esc(img(p)) + '" alt="' + esc(p.name) + '" width="600" height="600"><div class="thumbs" id="pdthumbs"></div>' + vidsHTML(p) + '</div><div>' +
     '<div class="brand">' + esc(p.brand) + '</div><h1>' + esc(p.name) + '</h1>' +
     '<div class="price">' + money(eff(p)) + (w ? '<s>' + money(w) + '</s>' : '') + '</div>' +
     (promoOn(p) ? '<p class="promo-l">' + ic('tag', 16) + ' Promotion −' + pct(p) + ' %' + (+p.promoEnd ? ' · se termine dans <b class="cd" data-end="' + (+p.promoEnd) + '">' + left(p.promoEnd) + '</b>' : '') + '</p>' : '') +
@@ -1060,7 +1090,7 @@ function route(keepScroll) {
     case 'produit': {
       var id = decodeURIComponent(path[1] || ''); app.innerHTML = vProduct(id);
       if (byId(id) && seen[0] !== id) { seen = [id].concat(seen.filter(function (x) { return x !== id; })).slice(0, 8); LS.set('ac_seen', seen); }
-      var p = byId(id); if (p) { document.title = p.name + ' — Alou Cissé'; DB.getImage(id).then(function (src) { var im = $('#pdimg'); if (src && im) im.src = src; }); }
+      var p = byId(id); if (p) { document.title = p.name + ' — Alou Cissé'; loadGallery(p); }
       break;
     }
     case 'panier': app.innerHTML = vCart(); break;
@@ -1077,9 +1107,16 @@ function route(keepScroll) {
 
 /* Délégation des clics */
 document.addEventListener('click', function (e) {
-  var t = e.target.closest('[data-add],[data-addq],[data-collect],[data-pq],[data-cq],[data-rm],[data-fav],[data-share],[data-copy],[data-print],[data-cpnrm],#cpnBtn,#instBtn,#placeBtn,#mapBtn,#themeBtn');
+  var t = e.target.closest('[data-add],[data-addq],[data-collect],[data-pq],[data-cq],[data-rm],[data-fav],[data-share],[data-copy],[data-print],[data-cpnrm],[data-vplay],#cpnBtn,#instBtn,#placeBtn,#mapBtn,#themeBtn');
   if (!t) return;
   if (t.dataset.fav) { e.preventDefault(); toggleFav(t.dataset.fav); return; }
+  if (t.dataset.vplay) {
+    var vp = byId(t.dataset.pid), vv = vp && (vp.videos || [])[+t.dataset.vplay]; if (!vv) return;
+    var el = document.createElement('video'); el.controls = true; el.autoplay = true; el.playsInline = true; el.setAttribute('playsinline', ''); el.preload = 'auto';
+    if (vp.thumb) el.poster = vp.thumb;
+    if (vv.url) el.src = vv.url; else if (vv.idb) IDB.get(vv.idb).then(function (b) { if (b) { el.src = URL.createObjectURL(b); el.play().catch(function () {}); } });
+    t.replaceWith(el); return;
+  }
   if (t.dataset.share) {
     var sp = byId(t.dataset.share), url = location.href, txt = sp ? sp.name + ' — ' + fcfa(eff(sp)) + ' chez ' + (STORE.name || 'Alou Cissé') : '';
     if (navigator.share) navigator.share({ title: sp ? sp.name : document.title, text: txt, url: url }).catch(function () {});
