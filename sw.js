@@ -1,6 +1,6 @@
 /* Service worker — Alou Cissé
    Changez VERSION à chaque mise à jour du site pour forcer le rafraîchissement. */
-const VERSION = 'ac-v3';
+const VERSION = 'ac-v4';
 const SHELL = ['./', './index.html', './config.js', './demo-data.js', './manifest.json', './icon-192.png', './icon-512.png'];
 const LIBS = ['www.gstatic.com', 'cdnjs.cloudflare.com'];
 

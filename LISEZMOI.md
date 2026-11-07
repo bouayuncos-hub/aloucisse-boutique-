@@ -77,6 +77,25 @@ Les clients paient par carte **sans compte PayPal** (bouton « Carte »), et la 
 ## Étape 7 — Installer l'application
 Sur Android (Chrome) : menu ⋮ → **Installer l'application**. Sur iPhone (Safari) : Partager → **Sur l'écran d'accueil**. Le catalogue reste consultable sans connexion ; la validation d'une commande nécessite Internet.
 
+## Nouveautés v4 — ventes, promotions, Mobile Money
+
+**Contacts** : +223 77 91 91 44 (principal, WhatsApp, Orange Money) et +223 66 50 14 44 (Moov Money). Ils sont modifiables dans **Contenu du site**. Vérifiez que chaque numéro de paiement correspond bien au bon opérateur, ainsi que le code du menu Orange Money (`#144#`). Le code du menu Moov Money reste à renseigner.
+
+**Côté clients**
+- **Achat en ligne par Orange Money / Moov Money** : à la commande, le client voit le montant exact, un bouton qui compose le code du menu, le numéro et le montant à copier. Il saisit ensuite la référence reçue par SMS, tout de suite ou plus tard depuis la page de suivi. La commande passe alors en « Paiement à vérifier ».
+- **Promotions** : prix barré, badge −X %, compte à rebours, section « Promotions » sur l'accueil.
+- **Codes promo** à saisir au paiement (démo : `BIENVENUE10`, −10 % dès 50 000 FCFA).
+- **Favoris ♥**, **récemment consultés**, **partage** d'un produit (WhatsApp…), **commande via WhatsApp** depuis le panier.
+- **Reçu imprimable / PDF**, bouton **WhatsApp flottant**, bouton **Installer l'application** (Android).
+
+**Côté administrateur**
+- **Produits** : publier ou dépublier, et modifier le **prix** et le **stock** directement dans la liste (validez avec Entrée). La fiche produit propose un prix promo et une date de fin.
+- **Promotions & prix** : lancer une vente flash (−X % sur une catégorie ou tout le catalogue, avec date de fin), arrêter une promo, créer ou désactiver des codes promo (en % ou en montant, avec achat minimum, expiration et nombre d'utilisations), changer les prix en masse (+/− %).
+- **Vente comptoir** : enregistrer une vente faite à la boutique en espèces, Orange Money (avec référence), Moov Money ou carte. Le stock est déduit et la vente est comptée dans le chiffre d'affaires.
+- **Tableau de bord** : bouton **✓ Payé** à côté de chaque paiement Orange Money / Moov à vérifier. Contrôlez d'abord le SMS reçu sur le téléphone marchand.
+
+⚠️ Après la mise à jour, **republiez `firestore.rules`** dans Firebase : les codes promo, l'envoi de la référence de paiement et les ventes comptoir en dépendent.
+
 ## Fonctionnement au quotidien
 
 **Statuts** : Reçue → Confirmée → En préparation → Prête au retrait / En livraison → Retirée / Livrée. Le client suit chaque étape sur `#/suivi/CODE` ou en scannant son QR code.
@@ -90,7 +109,7 @@ Sur Android (Chrome) : menu ⋮ → **Installer l'application**. Sur iPhone (Saf
 **Mise à jour du site** : après avoir modifié `index.html`, changez `VERSION` dans `sw.js` (ex. `ac-v2`) pour que les téléphones déjà installés récupèrent la nouvelle version.
 
 ## Limites connues et évolutions (phase 2)
-- **Mobile Money automatique** : brancher un agrégateur de paiement couvrant le Mali via une fonction serverless Vercel + webhook, pour passer les commandes en « Payé » sans vérification manuelle.
+- **Mobile Money 100 % automatique** (confirmation sans vérification manuelle) : nécessite un contrat marchand avec Orange Money / Moov ou un agrégateur, puis brancher un agrégateur de paiement couvrant le Mali via une fonction serverless Vercel + webhook, pour passer les commandes en « Payé » sans vérification manuelle.
 - **Prix** : vérifiés côté client au moment de la commande ; l'admin doit valider chaque commande (étape « Confirmée ») — une fonction serveur permettrait de recalculer les totaux de façon infalsifiable.
 - **Images** : stockées dans Firestore (gratuit). Au-delà de ~200 produits, passer à un stockage d'images dédié.
 - **Quotas gratuits Firestore** : environ 50 000 lectures et 20 000 écritures par jour, largement suffisant pour démarrer.

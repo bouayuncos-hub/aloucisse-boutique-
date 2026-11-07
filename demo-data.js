@@ -31,7 +31,7 @@ window.AC_SEED = [
   { id: "smart-band-9", name: "Xiaomi Smart Band 9", brand: "Xiaomi", cat: "connectes", price: 32000, oldPrice: 0, stock: 25, featured: false, active: true,
     desc: "Bracelet connecté, 21 jours d'autonomie.",
     specs: { "Autonomie": "21 jours", "Écran": "AMOLED 1,62\"" } },
-  { id: "powerbank-20000", name: "Batterie externe 20 000 mAh — 22,5 W", brand: "Anker", cat: "gadgets", price: 22000, oldPrice: 0, stock: 40, featured: true, active: true,
+  { id: "powerbank-20000", name: "Batterie externe 20 000 mAh — 22,5 W", brand: "Anker", cat: "gadgets", price: 22000, oldPrice: 0, promoPrice: 18000, promoEnd: 0, stock: 40, featured: true, active: true,
     desc: "Indispensable contre les coupures : 4 à 5 recharges de smartphone.",
     specs: { "Capacité": "20 000 mAh", "Puissance": "22,5 W" } },
   { id: "chargeur-gan-65w", name: "Chargeur GaN 65 W USB-C", brand: "Ugreen", cat: "gadgets", price: 25000, oldPrice: 0, stock: 30, featured: false, active: true,
@@ -43,4 +43,9 @@ window.AC_SEED = [
   { id: "arduino-uno-r4", name: "Arduino Uno R4 Minima", brand: "Arduino", cat: "composants", price: 18000, oldPrice: 0, stock: 12, featured: false, active: true,
     desc: "La carte idéale pour apprendre l'électronique.",
     specs: { "Microcontrôleur": "Renesas RA4M1", "Connecteur": "USB-C" } }
+];
+
+/* Code promo de démonstration */
+window.AC_SEED_COUPONS = [
+  { code: "BIENVENUE10", type: "pct", value: 10, min: 50000, end: 0, maxUses: 0, used: 0, active: true }
 ];

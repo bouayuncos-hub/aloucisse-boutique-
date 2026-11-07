@@ -29,12 +29,15 @@ window.AC_CONFIG = {
     name: "Alou Cissé",
     tagline: "Électronique & High-Tech",
     address: "Sébénikoro, Bamako, Mali",
-    phone: "+223 00 00 00 00",       // affiché + bouton « Appeler »
-    whatsapp: "22300000000",         // format international SANS + ni espaces
+    phone: "+223 77 91 91 44",       // téléphone principal (affiché + bouton « Appeler »)
+    phone2: "+223 66 50 14 44",      // second téléphone
+    whatsapp: "22377919144",         // WhatsApp : format international SANS + ni espaces
     email: "contact@alou-cisse.com",
     lat: 12.6390, lng: -8.0750,      // ⚠️ à ajuster sur la position exacte de la boutique
-    orangeMoney: "+223 00 00 00 00", // numéro marchand Orange Money
-    moovMoney: "+223 00 00 00 00",   // numéro marchand Moov Money
+    orangeMoney: "+223 77 91 91 44", // numéro qui reçoit les paiements Orange Money
+    moovMoney: "+223 66 50 14 44",   // numéro qui reçoit les paiements Moov Money
+    omUssd: "#144#",                 // code du menu Orange Money (à vérifier, modifiable dans l'admin)
+    moovUssd: "",                    // code du menu Moov Money (à renseigner dans l'admin)
     reservationHours: 48,            // durée de réservation Click & Collect
     // Horaires (heure de Bamako = GMT). d : 0 = dimanche … 6 = samedi
     hours: [

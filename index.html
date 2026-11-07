@@ -214,6 +214,22 @@ footer a{display:block;padding:3px 0}
 #toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--ink-text);padding:11px 18px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(min-width:900px){#toast{bottom:28px}}
+[hidden]{display:none!important}
+.pc{position:relative}
+.fav{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:999px;border:0;background:rgba(255,255,255,.92);color:#1d1d1f;display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.fav.on,.btn.on{color:#e0245e}.fav.on svg,.btn.on svg{fill:currentColor}
+.tag2{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.78);color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:999px}
+.promo-l{display:inline-flex;align-items:center;gap:6px;background:var(--danger-soft);color:var(--danger);font-weight:600;font-size:.88rem;padding:6px 12px;border-radius:999px;margin:8px 0 0}
+.fab{position:fixed;right:16px;bottom:calc(78px + env(safe-area-inset-bottom));z-index:19;width:54px;height:54px;border-radius:999px;background:#1fae5b;color:#fff;display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+@media(min-width:900px){.fab{bottom:24px}}
+.mm{border-radius:var(--r2);padding:14px;margin-top:12px;background:var(--surface2);border:1px solid var(--line);font-size:.92rem}
+.mm.om{border-left:5px solid #ff7900}.mm.moov{border-left:5px solid #0a6ebd}
+.mm ol{margin:8px 0 0;padding-left:20px}.mm li{margin:7px 0}
+.cp{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;font-size:.75rem;padding:3px 9px;cursor:pointer;margin-left:4px}
+.cpn{display:flex;gap:8px;margin:10px 0}
+.cpn .in{flex:1}
+.sec h2 .cdw{font-size:.85rem;font-weight:500;color:var(--danger)}
+@media print{.top,.bnav,footer,.btn,.fab,#demoBar,#annBar,#offBar,.refF,.cp{display:none!important}body{background:#fff;color:#000;padding:0}.box{box-shadow:none;border:1px solid #ccc}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -251,12 +267,13 @@ footer a{display:block;padding:3px 0}
 <footer>
   <div class="wrap cols">
     <div><b id="fName"></b><br><span id="fAddr"></span><br><span id="fOpen"></span><br><br><span id="fText"></span></div>
-    <div><b>Boutique</b><a href="#/catalogue">Catalogue</a><a href="#/boutique">Horaires & plan</a><a href="#/suivi">Suivre une commande</a><a href="admin.html">🔒 Espace administrateur</a></div>
-    <div><b>Contact</b><a id="fTel" href="#"></a><a id="fWa" href="#" target="_blank" rel="noopener">WhatsApp</a><a id="fMail" href="#"></a></div>
+    <div><b>Boutique</b><a href="#/catalogue">Catalogue</a><a href="#/boutique">Horaires & plan</a><a href="#/suivi">Suivre une commande</a><a href="#/favoris">♥ Mes favoris</a><a href="#" id="instBtn" hidden>📲 Installer l’application</a><a href="admin.html">🔒 Espace administrateur</a></div>
+    <div><b>Contact</b><a id="fTel" href="#"></a><a id="fTel2" href="#"></a><a id="fWa" href="#" target="_blank" rel="noopener">WhatsApp</a><a id="fMail" href="#"></a></div>
   </div>
   <div class="wrap small" style="margin-top:18px">© <span id="yr"></span> <span id="fCopy"></span></div>
 </footer>
 
+<a class="fab" id="fab" href="#" target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp"></a>
 <nav class="bnav" aria-label="Navigation mobile">
   <a href="#/" data-nav="home"><span data-ic="home"></span>Accueil</a>
   <a href="#/catalogue" data-nav="catalogue"><span data-ic="grid"></span>Catalogue</a>
@@ -327,6 +344,10 @@ var I = {
   shield: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
   phoneM: '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>',
   lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
+  share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>',
+  print: '<path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
+  tag: '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/>',
   plus: '<path d="M12 5v14M5 12h14"/>'
 };
 function ic(n, s) { s = s || 20; return '<svg class="ic" width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (I[n] || '') + '</svg>'; }
@@ -377,6 +398,24 @@ function money(xof, cur) {
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: cur }).format(v);
 }
 function fcfa(x) { return money(x, 'XOF'); }
+function promoOn(p) { return +p.promoPrice > 0 && +p.promoPrice < +p.price && (!+p.promoEnd || +p.promoEnd > Date.now()); }
+function eff(p) { return promoOn(p) ? +p.promoPrice : +p.price; }
+function wasPrice(p) { return promoOn(p) ? +p.price : (+p.oldPrice > +p.price ? +p.oldPrice : 0); }
+function pct(p) { var w = wasPrice(p); return w ? Math.round(100 - eff(p) * 100 / w) : 0; }
+function left(end) {
+  var ms = +end - Date.now(); if (ms <= 0) return 'terminé';
+  var d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.floor(ms % 36e5 / 6e4);
+  return d ? d + ' j ' + h + ' h' : h ? h + ' h ' + m + ' min' : m + ' min';
+}
+var favs = LS.get('ac_fav', []), seen = LS.get('ac_seen', []);
+function isFav(id) { return favs.indexOf(id) >= 0; }
+function toggleFav(id) {
+  if (isFav(id)) favs = favs.filter(function (x) { return x !== id; }); else favs.unshift(id);
+  LS.set('ac_fav', favs);
+  $$('[data-fav="' + id + '"]').forEach(function (b) { b.classList.toggle('on', isFav(id)); b.setAttribute('aria-pressed', isFav(id)); });
+  toast(isFav(id) ? 'Ajouté aux favoris' : 'Retiré des favoris');
+  if (S.view === 'favoris') route(true);
+}
 function stockInfo(p) {
   var s = +p.stock || 0;
   if (s <= 0) return { c: 'out', t: 'Rupture de stock' };
@@ -428,6 +467,20 @@ var DB = {
     if (!db) return;
     db.doc('settings/site').onSnapshot(function (d) { cb(d.exists ? d.data() : {}); }, function () {});
   },
+  demoCoupons: function () {
+    var m = LS.get('ac_demo_coupons', null);
+    if (!m) { m = {}; (window.AC_SEED_COUPONS || []).forEach(function (c) { m[c.code] = c; }); LS.set('ac_demo_coupons', m); }
+    return m;
+  },
+  getCoupon: function (code) {
+    if (DEMO) return Promise.resolve(DB.demoCoupons()[code] || null);
+    if (!db) return Promise.reject(new Error('offline'));
+    return db.doc('coupons/' + code).get().then(function (d) { return d.exists ? d.data() : null; });
+  },
+  submitRef: function (code, ref) {
+    if (DEMO) { var o = LS.get('ac_demo_orders', {}); if (o[code]) { o[code].payment.ref = ref; o[code].paymentStatus = 'a_verifier'; LS.set('ac_demo_orders', o); } return Promise.resolve(); }
+    return db.collection('orders').doc(code).update({ 'payment.ref': ref, paymentStatus: 'a_verifier' });
+  },
   getImage: function (id) {
     if (DEMO) return Promise.resolve(LS.get('ac_demo_img_' + id, null));
     if (!db) return Promise.resolve(null);
@@ -442,6 +495,7 @@ var DB = {
           if (!p) throw new Error('Produit indisponible : ' + it.name);
           if ((+p.stock || 0) < it.qty) throw new Error('Stock insuffisant : ' + it.name + ' (reste ' + (+p.stock || 0) + ')');
         });
+        if (order.coupon) { var cm = DB.demoCoupons(), ce = couponErr(cm[order.coupon], order.subtotal); if (ce) throw new Error(ce); cm[order.coupon].used = (+cm[order.coupon].used || 0) + 1; LS.set('ac_demo_coupons', cm); }
       } catch (e) { return Promise.reject(e); }
       order.items.forEach(function (it) { var p = all.filter(function (x) { return x.id === it.id; })[0]; p.stock = (+p.stock || 0) - it.qty; });
       LS.set('ac_demo_products', all);
@@ -451,17 +505,21 @@ var DB = {
     }
     if (!db) return Promise.reject(new Error('Serveur injoignable, réessayez.'));
     var oref = db.collection('orders').doc(order.code);
+    var cref = order.coupon ? db.collection('coupons').doc(order.coupon) : null;
     return db.runTransaction(function (t) {
       var refs = order.items.map(function (i) { return db.collection('products').doc(i.id); });
-      return Promise.all(refs.map(function (r) { return t.get(r); })).then(function (snaps) {
+      return Promise.all(refs.concat(cref ? [cref] : []).map(function (r) { return t.get(r); })).then(function (all) {
+        var snaps = all.slice(0, refs.length), cs = cref ? all[refs.length] : null;
+        if (cs) { var ce = couponErr(cs.exists ? cs.data() : null, order.subtotal); if (ce) throw new Error(ce); }
         snaps.forEach(function (s, k) {
           var it = order.items[k];
           if (!s.exists || s.data().active === false) throw new Error('Produit indisponible : ' + it.name);
           var st = +s.data().stock || 0;
           if (st < it.qty) throw new Error('Stock insuffisant : ' + it.name + ' (reste ' + st + ')');
-          if (+s.data().price !== +it.price) throw new Error('Le prix de « ' + it.name + ' » a changé. Vérifiez votre panier.');
+          if (eff(s.data()) !== +it.price) throw new Error('Le prix de « ' + it.name + ' » a changé. Vérifiez votre panier.');
         });
         snaps.forEach(function (s, k) { t.update(refs[k], { stock: (+s.data().stock || 0) - order.items[k].qty }); });
+        if (cs) t.update(cref, { used: (+cs.data().used || 0) + 1 });
         var data = Object.assign({}, order, { ts: firebase.firestore.FieldValue.serverTimestamp() });
         t.set(oref, data);
       });
@@ -487,7 +545,7 @@ function saveCart() {
 function cartLines() {
   return cart.map(function (c) { return { p: byId(c.id), qty: c.qty }; }).filter(function (l) { return l.p; });
 }
-function subtotal() { return cartLines().reduce(function (a, l) { return a + l.p.price * l.qty; }, 0); }
+function subtotal() { return cartLines().reduce(function (a, l) { return a + eff(l.p) * l.qty; }, 0); }
 function addToCart(id, qty, silent) {
   var p = byId(id); if (!p) return false;
   var it = cart.filter(function (i) { return i.id === id; })[0];
@@ -530,15 +588,16 @@ function hoursTable() {
   return '<table class="hours">' + rows + '</table>';
 }
 function waLink(text) { return 'https://wa.me/' + digits(STORE.whatsapp) + (text ? '?text=' + encodeURIComponent(text) : ''); }
-function telLink() { return 'tel:' + String(STORE.phone || '').replace(/\s/g, ''); }
+function telLink(n) { return 'tel:' + String(n || STORE.phone || '').replace(/\s/g, ''); }
 
 /* ================= VUES ================= */
 function card(p) {
-  var si = stockInfo(p), promo = p.oldPrice > p.price;
-  return '<div class="pc"><a href="#/produit/' + encodeURIComponent(p.id) + '"><div class="pimg"><img src="' + esc(img(p)) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async" width="200" height="180">' +
-    (promo ? '<span class="tag">-' + Math.round(100 - p.price * 100 / p.oldPrice) + '%</span>' : '') + '</div></a>' +
-    '<div class="pb"><div class="brand">' + esc(p.brand) + '</div><a class="pn" href="#/produit/' + encodeURIComponent(p.id) + '">' + esc(p.name) + '</a>' +
-    '<div class="pp">' + money(p.price) + (promo ? '<s>' + money(p.oldPrice) + '</s>' : '') + '</div>' +
+  var si = stockInfo(p), w = wasPrice(p), f = isFav(p.id), u = '#/produit/' + encodeURIComponent(p.id);
+  return '<div class="pc"><a href="' + u + '"><div class="pimg"><img src="' + esc(img(p)) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async" width="200" height="180">' +
+    (w ? '<span class="tag">-' + pct(p) + '%</span>' : '') + (promoOn(p) && +p.promoEnd ? '<span class="tag2">⏱ <span class="cd" data-end="' + (+p.promoEnd) + '">' + left(p.promoEnd) + '</span></span>' : '') + '</div></a>' +
+    '<button class="fav' + (f ? ' on' : '') + '" data-fav="' + esc(p.id) + '" aria-pressed="' + f + '" aria-label="Favori : ' + esc(p.name) + '">' + ic('heart', 18) + '</button>' +
+    '<div class="pb"><div class="brand">' + esc(p.brand) + '</div><a class="pn" href="' + u + '">' + esc(p.name) + '</a>' +
+    '<div class="pp">' + money(eff(p)) + (w ? '<s>' + money(w) + '</s>' : '') + '</div>' +
     '<div class="pfoot"><span class="stk ' + si.c + '">' + si.t + '</span><button class="add" data-add="' + esc(p.id) + '" aria-label="Ajouter ' + esc(p.name) + ' au panier"' + (si.c === 'out' ? ' disabled' : '') + '>' + ic('plus', 18) + '</button></div></div></div>';
 }
 function skeletonGrid(n) { var h = ''; for (var i = 0; i < n; i++) h += '<div class="sk" style="aspect-ratio:3/4"></div>'; return '<div class="grid">' + h + '</div>'; }
@@ -555,17 +614,38 @@ function vHome() {
     '<div class="perks">' + (CONTENT.perks || []).slice(0, 4).map(function (p, i) { return p && p.t ? '<div class="perk">' + ic(pic[i]) + '<div><b>' + esc(p.t) + '</b>' + esc(p.d) + '</div></div>' : ''; }).join('') + '</div>' +
     '<div class="sec"><h2>Catégories</h2><a href="#/catalogue">Tout voir</a></div>' +
     '<div class="cats">' + CATS.map(function (c) { return '<a class="cat" href="#/catalogue?cat=' + c.id + '"><img src="' + ph(c.id) + '" alt="" width="100" height="90">' + c.name + '</a>'; }).join('') + '</div>' +
+    flashHTML() +
     '<div class="sec"><h2>Sélection du moment</h2><a href="#/catalogue">Catalogue complet</a></div>' +
     (S.products.length ? '<div class="grid">' + feat.map(card).join('') + '</div>' : skeletonGrid(4)) +
+    seenHTML('') +
     '<div class="sec"><h2>Notre boutique</h2></div>' +
-    '<div class="box"><div class="row" style="justify-content:space-between"><div><b>' + esc(STORE.address) + '</b><br><span class="open ' + (os.open ? 'yes' : '') + '">' + os.txt + '</span></div>' +
+    '<div class="box"><div class="row" style="justify-content:space-between"><div><b>' + esc(STORE.address) + '</b><br><span class="open ' + (os.open ? 'yes' : '') + '">' + os.txt + '</span><br>' + phonesHTML() + '</div>' +
     '<div class="row"><a class="btn sm ghost" href="#/boutique">' + ic('pin', 18) + 'Plan & horaires</a><a class="btn sm wa" href="' + waLink('Bonjour Alou Cissé, ') + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'WhatsApp</a></div></div></div>';
 }
 
+function flashHTML() {
+  var fl = S.products.filter(promoOn).sort(function (a, b) { return pct(b) - pct(a); }).slice(0, 8);
+  if (!fl.length) return '';
+  var ends = fl.map(function (p) { return +p.promoEnd || 0; }).filter(Boolean), soon = ends.length ? Math.min.apply(null, ends) : 0;
+  return '<div class="sec"><h2>' + ic('tag') + ' Promotions' + (soon ? ' <span class="cdw">· se termine dans <span class="cd" data-end="' + soon + '">' + left(soon) + '</span></span>' : '') + '</h2><a href="#/catalogue?tri=promo">Tout voir</a></div>' +
+    '<div class="grid">' + fl.map(card).join('') + '</div>';
+}
+function seenHTML(except) {
+  var l = seen.filter(function (id) { return id !== except; }).map(byId).filter(Boolean).slice(0, 4);
+  return l.length ? '<div class="sec"><h2>Récemment consultés</h2></div><div class="grid">' + l.map(card).join('') + '</div>' : '';
+}
+function phonesHTML() {
+  return [STORE.phone, STORE.phone2].filter(Boolean).map(function (n) { return '<a href="' + telLink(n) + '"><u>' + esc(n) + '</u></a>'; }).join(' · ');
+}
+function vFav() {
+  var l = favs.map(byId).filter(Boolean);
+  return '<h1>Mes favoris</h1>' + (l.length ? '<div class="grid">' + l.map(card).join('') + '</div>' :
+    '<div class="empty">' + ic('heart', 48) + '<p>Touchez le cœur d’un produit pour le retrouver ici.</p><a class="btn" href="#/catalogue">Parcourir le catalogue</a></div>');
+}
 function vCatalog(q) {
   var cat = q.get('cat') || '', s = q.get('q') || '', sort = q.get('tri') || '', stock = q.get('stock') === '1';
   return '<h1>Catalogue</h1>' +
-    '<div class="filters" id="cats"><button class="chip ' + (!cat ? 'on' : '') + '" data-cat="">Tout</button>' +
+    '<div class="filters" id="cats"><a class="chip" href="#/favoris">♥ Favoris (' + favs.length + ')</a><button class="chip ' + (!cat ? 'on' : '') + '" data-cat="">Tout</button>' +
     CATS.map(function (c) { return '<button class="chip ' + (cat === c.id ? 'on' : '') + '" data-cat="' + c.id + '">' + c.name + '</button>'; }).join('') + '</div>' +
     '<div class="tbar"><label class="sr" for="cq">Rechercher</label><input id="cq" type="search" placeholder="Rechercher…" value="' + esc(s) + '">' +
     '<label class="sr" for="csort">Trier</label><select id="csort"><option value="">Pertinence</option><option value="asc"' + (sort === 'asc' ? ' selected' : '') + '>Prix croissant</option><option value="desc"' + (sort === 'desc' ? ' selected' : '') + '>Prix décroissant</option><option value="promo"' + (sort === 'promo' ? ' selected' : '') + '>Promotions</option></select>' +
@@ -573,7 +653,8 @@ function vCatalog(q) {
     '<p class="small muted" id="ccount"></p><div id="cgrid"></div>';
 }
 function catalogState() {
-  return { cat: ($('.chip.on', $('#cats')) || {}).dataset ? $('.chip.on', $('#cats')).dataset.cat : '', q: $('#cq').value.trim(), tri: $('#csort').value, stock: $('#cstock').checked };
+  var on = $('.chip.on', $('#cats'));
+  return { cat: on && on.dataset ? (on.dataset.cat || '') : '', q: $('#cq').value.trim(), tri: $('#csort').value, stock: $('#cstock').checked };
 }
 function renderGrid() {
   var g = $('#cgrid'); if (!g) return;
@@ -586,9 +667,9 @@ function renderGrid() {
     var hay = (p.name + ' ' + p.brand + ' ' + catName(p.cat) + ' ' + (p.desc || '')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     return words.every(function (w) { return hay.indexOf(w) >= 0; });
   });
-  if (st.tri === 'asc') list.sort(function (a, b) { return a.price - b.price; });
-  else if (st.tri === 'desc') list.sort(function (a, b) { return b.price - a.price; });
-  else if (st.tri === 'promo') list = list.filter(function (p) { return p.oldPrice > p.price; });
+  if (st.tri === 'asc') list.sort(function (a, b) { return eff(a) - eff(b); });
+  else if (st.tri === 'desc') list.sort(function (a, b) { return eff(b) - eff(a); });
+  else if (st.tri === 'promo') list = list.filter(function (p) { return pct(p) > 0; });
   else list.sort(function (a, b) { return ((+b.stock > 0) - (+a.stock > 0)) || ((b.featured ? 1 : 0) - (a.featured ? 1 : 0)); });
   $('#ccount').textContent = list.length + ' produit' + (list.length > 1 ? 's' : '');
   g.innerHTML = list.length ? '<div class="grid">' + list.map(card).join('') + '</div>' :
@@ -611,7 +692,7 @@ function bindCatalog() {
 function vProduct(id) {
   var p = byId(id);
   if (!p) return S.loaded ? '<div class="empty">' + ic('box', 48) + '<p>Ce produit n’existe pas ou n’est plus disponible.</p><a class="btn" href="#/catalogue">Retour au catalogue</a></div>' : '<div class="sk" style="height:420px"></div>';
-  var si = stockInfo(p), max = Math.min(+p.stock || 0, MAXQ), promo = p.oldPrice > p.price;
+  var si = stockInfo(p), max = Math.min(+p.stock || 0, MAXQ), w = wasPrice(p), f = isFav(p.id);
   if (S.pq > max) S.pq = Math.max(1, max);
   var specs = p.specs && Object.keys(p.specs).length ? '<h2 style="margin-top:28px">Caractéristiques</h2><table class="specs">' +
     Object.keys(p.specs).map(function (k) { return '<tr><td>' + esc(k) + '</td><td>' + esc(p.specs[k]) + '</td></tr>'; }).join('') + '</table>' : '';
@@ -619,19 +700,22 @@ function vProduct(id) {
   return '<div class="crumb"><a href="#/catalogue">Catalogue</a> › <a href="#/catalogue?cat=' + esc(p.cat) + '">' + esc(catName(p.cat)) + '</a></div>' +
     '<div class="pd"><div class="gal"><img id="pdimg" src="' + esc(img(p)) + '" alt="' + esc(p.name) + '" width="600" height="600"></div><div>' +
     '<div class="brand">' + esc(p.brand) + '</div><h1>' + esc(p.name) + '</h1>' +
-    '<div class="price">' + money(p.price) + (promo ? '<s>' + money(p.oldPrice) + '</s>' : '') + '</div>' +
-    (S.cur !== 'XOF' ? '<div class="alt">Prix de référence : ' + fcfa(p.price) + '</div>' : '') +
+    '<div class="price">' + money(eff(p)) + (w ? '<s>' + money(w) + '</s>' : '') + '</div>' +
+    (promoOn(p) ? '<p class="promo-l">' + ic('tag', 16) + ' Promotion −' + pct(p) + ' %' + (+p.promoEnd ? ' · se termine dans <b class="cd" data-end="' + (+p.promoEnd) + '">' + left(p.promoEnd) + '</b>' : '') + '</p>' : '') +
+    (S.cur !== 'XOF' ? '<div class="alt">Prix de référence : ' + fcfa(eff(p)) + '</div>' : '') +
+    '<div class="row" style="margin-top:10px"><button class="btn sm ghost' + (f ? ' on' : '') + '" data-fav="' + esc(p.id) + '" aria-pressed="' + f + '">' + ic('heart', 16) + 'Favori</button><button class="btn sm ghost" data-share="' + esc(p.id) + '">' + ic('share', 16) + 'Partager</button></div>' +
     '<p class="stk ' + si.c + '" style="margin:10px 0 16px">' + si.t + '</p>' +
     (max ? '<div class="row" style="margin-bottom:12px"><div class="qty" aria-label="Quantité"><button data-pq="-1" aria-label="Moins">−</button><span id="pqv">' + S.pq + '</span><button data-pq="1" aria-label="Plus">+</button></div>' +
       '<button class="btn" style="flex:1" data-addq="' + esc(p.id) + '">' + ic('cart', 18) + 'Ajouter au panier</button></div>' +
       '<button class="btn ghost block" data-collect="' + esc(p.id) + '">' + ic('store', 18) + 'Réserver & retirer à Sébénikoro</button>'
       : '<a class="btn wa block" href="' + waLink('Bonjour, le produit « ' + p.name + ' » sera-t-il bientôt disponible ?') + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'Me prévenir du retour en stock</a>') +
-    '<ul class="info"><li>' + ic('store') + '<span><b>Click & Collect gratuit</b> — réservé ' + (STORE.reservationHours || 48) + ' h, payez au retrait (espèces, Orange/Moov Money).</span></li>' +
+    '<ul class="info"><li>' + ic('store') + '<span><b>Click & Collect gratuit</b> — réservé ' + (STORE.reservationHours || 48) + ' h, payez en ligne ou au retrait (espèces, Orange/Moov Money).</span></li>' +
     '<li>' + ic('truck') + '<span><b>Livraison à Bamako</b> — dès ' + fcfa(Math.min.apply(null, (S.settings.zones || [{ fee: 0 }]).map(function (z) { return z.fee; }))) + (S.settings.freeFrom ? ', offerte dès ' + fcfa(S.settings.freeFrom) : '') + '.</span></li>' +
+    '<li>' + ic('phoneM') + '<span><b>Achat en ligne par Orange Money ou Moov Money</b> — payez depuis votre téléphone.</span></li>' +
     '<li>' + ic('globe') + '<span><b>Expédition internationale</b> — payez par carte ou PayPal, numéro de suivi fourni.</span></li>' +
     '<li>' + ic('shield') + '<span><b>Produit neuf et garanti</b>, facture remise.</span></li></ul>' +
     (p.desc ? '<p>' + esc(p.desc) + '</p>' : '') + specs + '</div></div>' +
-    (rel.length ? '<div class="sec"><h2>Dans la même catégorie</h2></div><div class="grid">' + rel.map(card).join('') + '</div>' : '');
+    (rel.length ? '<div class="sec"><h2>Dans la même catégorie</h2></div><div class="grid">' + rel.map(card).join('') + '</div>' : '') + seenHTML(p.id);
 }
 
 function vCart() {
@@ -640,14 +724,64 @@ function vCart() {
   var sub = subtotal();
   return '<h1>Panier</h1><div class="co"><div class="box">' + lines.map(function (l) {
     return '<div class="line"><a href="#/produit/' + encodeURIComponent(l.p.id) + '"><img src="' + esc(img(l.p)) + '" alt="" loading="lazy"></a><div><div class="nm">' + esc(l.p.name) + '</div>' +
-      '<div class="small muted">' + money(l.p.price) + '</div><div class="row" style="margin-top:6px"><div class="qty" style="height:36px"><button data-cq="' + esc(l.p.id) + '" data-d="-1" aria-label="Moins">−</button><span>' + l.qty + '</span><button data-cq="' + esc(l.p.id) + '" data-d="1" aria-label="Plus">+</button></div>' +
-      '<button class="rm" data-rm="' + esc(l.p.id) + '" aria-label="Retirer">' + ic('trash', 18) + '</button></div></div><b>' + money(l.p.price * l.qty) + '</b></div>';
+      '<div class="small muted">' + money(eff(l.p)) + '</div><div class="row" style="margin-top:6px"><div class="qty" style="height:36px"><button data-cq="' + esc(l.p.id) + '" data-d="-1" aria-label="Moins">−</button><span>' + l.qty + '</span><button data-cq="' + esc(l.p.id) + '" data-d="1" aria-label="Plus">+</button></div>' +
+      '<button class="rm" data-rm="' + esc(l.p.id) + '" aria-label="Retirer">' + ic('trash', 18) + '</button></div></div><b>' + money(eff(l.p) * l.qty) + '</b></div>';
   }).join('') + '</div><aside class="box co-sum"><div class="tot"><span>Sous-total</span><b>' + money(sub) + '</b></div>' +
     '<div class="tot"><span>Livraison</span><span class="muted">calculée à l’étape suivante</span></div>' +
     '<div class="tot big"><span>Total estimé</span><span>' + money(sub) + '</span></div>' +
     (S.cur !== 'XOF' ? '<p class="alt">Soit ' + fcfa(sub) + '</p>' : '') +
     '<a class="btn gold block" href="#/commande" style="margin-top:12px">Passer la commande</a>' +
+    '<a class="btn wa block" style="margin-top:8px" target="_blank" rel="noopener" href="' + waLink(cartMsg()) + '">' + ic('chat', 18) + 'Commander via WhatsApp</a>' +
     '<p class="small muted center" style="margin:10px 0 0">Retrait en boutique gratuit · Orange Money · Moov Money · Carte · PayPal</p></aside></div>';
+}
+
+function cartMsg() {
+  return 'Bonjour Alou Cissé, je souhaite commander :\n' + cartLines().map(function (l) { return '• ' + l.qty + ' × ' + l.p.name + ' — ' + fcfa(eff(l.p) * l.qty); }).join('\n') + '\nTotal : ' + fcfa(subtotal());
+}
+
+/* ---------- Codes promo ---------- */
+function couponErr(c, sub) {
+  if (!c || c.active === false) return 'Code promo inconnu ou désactivé';
+  if (+c.end && +c.end < Date.now()) return 'Ce code promo a expiré';
+  if (+c.maxUses && (+c.used || 0) >= +c.maxUses) return 'Ce code promo a atteint sa limite d’utilisation';
+  if (+c.min && sub < +c.min) return 'Ce code est valable dès ' + fcfa(c.min) + ' d’achat';
+  return '';
+}
+function discount(sub) {
+  var c = co.coupon; if (!c || (c.min && sub < c.min)) return 0;
+  return Math.min(sub, c.type === 'pct' ? Math.round(sub * c.value / 100) : +c.value);
+}
+function applyCoupon() {
+  var code = ($('#cpnIn').value || '').trim().toUpperCase().replace(/\s/g, '');
+  if (!code) return;
+  if (!/^[A-Z0-9_-]{3,20}$/.test(code)) { toast('Code promo invalide'); return; }
+  DB.getCoupon(code).then(function (c) {
+    var e = couponErr(c, subtotal()); if (e) { toast(e); return; }
+    co.coupon = { code: code, type: c.type, value: +c.value, min: +c.min || 0 };
+    toast('Code promo appliqué'); $('#cosum').innerHTML = sumHTML(); $('#payN').innerHTML = payNote();
+  }).catch(function () { toast('Vérification impossible, réessayez'); });
+}
+
+/* ---------- Orange Money / Moov Money ---------- */
+function mmBox(m, amount, code) {
+  var om = m === 'om', nm = om ? 'Orange Money' : 'Moov Money', num = om ? STORE.orangeMoney : STORE.moovMoney, ussd = om ? STORE.omUssd : STORE.moovUssd;
+  var local = digits(num).replace(/^223(?=\d{8}$)/, '');
+  return '<div class="mm ' + m + '"><b>Payer ' + fcfa(amount) + ' par ' + nm + '</b><ol>' +
+    (ussd ? '<li>Composez <a class="btn sm" href="tel:' + encodeURIComponent(ussd) + '">' + esc(ussd) + '</a> depuis votre téléphone ' + nm + '.</li>' : '<li>Ouvrez votre menu ou votre application ' + nm + '.</li>') +
+    '<li>Choisissez le paiement ou le transfert vers le <b>' + esc(num) + '</b> <button type="button" class="cp" data-copy="' + esc(local) + '">Copier</button></li>' +
+    '<li>Montant : <b>' + fcfa(amount) + '</b> <button type="button" class="cp" data-copy="' + Math.round(amount) + '">Copier</button>' + (code ? ' · motif : <b>' + esc(code) + '</b>' : '') + '</li>' +
+    '<li>Validez avec votre code secret, puis indiquez ci-dessous la <b>référence reçue par SMS</b>.</li></ol></div>';
+}
+function refForm(code) {
+  return '<form class="refF" data-code="' + esc(code) + '"><label class="f" for="ref_' + esc(code) + '">Référence reçue par SMS</label><div class="row"><input class="in" id="ref_' + esc(code) + '" name="ref" required minlength="4" maxlength="60" style="flex:1;min-width:170px;width:auto" placeholder="Ex. PP241107.1530.C12345"><button class="btn gold">J’ai payé</button></div></form>';
+}
+function mmPanel(o) {
+  var pay = o.payment.method;
+  if ((pay !== 'om' && pay !== 'moov') || o.paymentStatus === 'paye' || o.status === 'annulee') return '';
+  var nm = pay === 'om' ? 'Orange Money' : 'Moov Money';
+  return '<div class="box"><h2>Paiement ' + nm + '</h2>' + (o.payment.ref ?
+    '<p>Référence reçue : <b>' + esc(o.payment.ref) + '</b>. Nous vérifions votre paiement ; le statut passera à « Payé ».</p>' :
+    mmBox(pay, o.total, o.code) + refForm(o.code) + '<p class="small muted">' + ic('shield', 14) + ' Ne communiquez jamais votre code secret ' + nm + ', même à nos équipes.</p>') + '</div>';
 }
 
 /* ---------- Tunnel de commande ---------- */
@@ -659,8 +793,8 @@ var MODES = {
 };
 var PAYS = {
   cash: { t: 'Espèces', s: function () { return co.mode === 'collect' ? 'Payez au retrait en boutique' : 'Payez à la livraison'; } },
-  om: { t: 'Orange Money', s: function () { return 'Paiement marchand au ' + STORE.orangeMoney; } },
-  moov: { t: 'Moov Money', s: function () { return 'Paiement marchand au ' + STORE.moovMoney; } },
+  om: { t: 'Orange Money', s: function () { return 'Payez en ligne depuis votre téléphone · ' + STORE.orangeMoney; } },
+  moov: { t: 'Moov Money', s: function () { return 'Payez en ligne depuis votre téléphone · ' + STORE.moovMoney; } },
   card: { t: 'Carte Visa / Mastercard', s: function () { return 'Paiement sécurisé via PayPal, sans compte'; } },
   paypal: { t: 'PayPal', s: function () { return 'Payez avec votre compte PayPal'; } }
 };
@@ -697,23 +831,25 @@ function modeFields() {
 }
 function payNote() {
   if (co.pay === 'om' || co.pay === 'moov') {
-    var num = co.pay === 'om' ? STORE.orangeMoney : STORE.moovMoney, nm = co.pay === 'om' ? 'Orange Money' : 'Moov Money';
-    return '<div class="note gold">Depuis votre menu ' + nm + ', effectuez un <b>paiement marchand de ' + fcfa(totalNow() || 0) + '</b> au <b>' + esc(num) + '</b>, puis indiquez la référence de la transaction ci-dessous. ' +
-      'Vous pouvez aussi la saisir plus tard sur WhatsApp. ' + (co.mode !== 'relay' ? 'Si vous préférez, payez par ' + nm + ' ' + (co.mode === 'collect' ? 'au retrait.' : 'à la livraison.') : '') + '</div>' +
-      field('payRef', 'Référence de transaction <i>(facultatif)</i>', 'text', 'Ex. CI240611.1234.A12345');
+    var nm = co.pay === 'om' ? 'Orange Money' : 'Moov Money', t = totalNow();
+    return (t == null ? '<div class="note">Choisissez d’abord le mode de réception pour connaître le montant exact.</div>' : mmBox(co.pay, t, '')) +
+      field('payRef', 'Référence de la transaction (SMS) <i>— facultatif, vous pourrez aussi la saisir après la commande</i>', 'text', 'Ex. PP241107.1530.C12345') +
+      '<p class="small muted">' + ic('shield', 14) + ' Ne communiquez jamais votre code secret ' + nm + '. ' + (co.mode !== 'relay' ? 'Vous pouvez aussi payer par ' + nm + ' ' + (co.mode === 'collect' ? 'au retrait.' : 'à la livraison.') : '') + '</p>';
   }
   if (co.pay === 'card' || co.pay === 'paypal') return '<div class="note">Montant débité en euros : <b>' + money(totalNow() || 0, 'EUR') + '</b>. Après validation, le paiement sécurisé PayPal s’ouvre' + (co.pay === 'card' ? ' (aucun compte PayPal nécessaire).' : '.') + '</div>';
   if (co.pay === 'cash') return '<div class="note">Prévoyez l’appoint si possible. ' + (co.mode === 'collect' ? 'Paiement au comptoir de la boutique.' : 'Notre livreur vous appelle avant de passer.') + '</div>';
   return '';
 }
-function totalNow() { var sub = subtotal(), sh = shipping(sub); return sh == null ? null : sub + sh; }
+function totalNow() { var sub = subtotal(), sh = shipping(sub); return sh == null ? null : sub - discount(sub) + sh; }
 function sumHTML() {
-  var sub = subtotal(), sh = shipping(sub), lines = cartLines();
-  return '<h2>Récapitulatif</h2>' + lines.map(function (l) { return '<div class="tot small"><span>' + l.qty + ' × ' + esc(l.p.name) + '</span><span>' + money(l.p.price * l.qty) + '</span></div>'; }).join('') +
+  var sub = subtotal(), sh = shipping(sub), d = discount(sub), lines = cartLines(), c = co.coupon, tot = sub - d + (sh || 0);
+  return '<h2>Récapitulatif</h2>' + lines.map(function (l) { return '<div class="tot small"><span>' + l.qty + ' × ' + esc(l.p.name) + '</span><span>' + money(eff(l.p) * l.qty) + '</span></div>'; }).join('') +
     '<div class="tot" style="border-top:1px solid var(--line);margin-top:8px;padding-top:10px"><span>Sous-total</span><span>' + money(sub) + '</span></div>' +
+    (c ? '<div class="tot" style="color:var(--ok)"><span>Code ' + esc(c.code) + ' <button type="button" class="cp" data-cpnrm="1">retirer</button></span><span>' + (d ? '− ' + money(d) : '<span class="small">dès ' + fcfa(c.min) + '</span>') + '</span></div>' :
+      '<div class="cpn"><label class="sr" for="cpnIn">Code promo</label><input class="in" id="cpnIn" placeholder="Code promo" autocomplete="off" style="text-transform:uppercase"><button type="button" class="btn sm ghost" id="cpnBtn" style="height:44px">Appliquer</button></div>') +
     '<div class="tot"><span>' + (co.mode === 'collect' ? 'Retrait en boutique' : 'Livraison') + '</span><span>' + (sh == null ? '<span class="muted">à choisir</span>' : sh === 0 ? 'Gratuit' : money(sh)) + '</span></div>' +
-    '<div class="tot big"><span>Total</span><span>' + money(sub + (sh || 0)) + '</span></div>' +
-    (S.cur !== 'XOF' ? '<p class="alt">Montant facturé : ' + fcfa(sub + (sh || 0)) + '</p>' : '') +
+    '<div class="tot big"><span>Total</span><span>' + money(tot) + '</span></div>' +
+    (S.cur !== 'XOF' ? '<p class="alt">Montant facturé : ' + fcfa(tot) + '</p>' : '') +
     '<button class="btn gold block" id="placeBtn" style="margin-top:12px">' + ic('check', 18) + (co.mode === 'collect' ? 'Réserver ma commande' : 'Valider la commande') + '</button>' +
     '<p class="small muted center" style="margin:10px 0 0">' + ic('shield', 16) + ' Vos données ne servent qu’au traitement de la commande.</p>';
 }
@@ -775,12 +911,12 @@ function validate() {
 function placeOrder(btn) {
   var err = validate(); if (err) { toast(err); return; }
   if (!DEMO && !navigator.onLine) { toast('Connexion internet requise pour valider la commande'); return; }
-  var lines = cartLines(), sub = subtotal(), sh = shipping(sub), now = Date.now(), total = sub + sh;
+  var lines = cartLines(), sub = subtotal(), sh = shipping(sub), dsc = discount(sub), now = Date.now(), total = sub - dsc + sh;
   var online = co.pay === 'card' || co.pay === 'paypal';
   var order = {
     code: newCode(), createdAt: now, status: 'recue', history: [{ s: 'recue', at: now }],
-    items: lines.map(function (l) { return { id: l.p.id, name: l.p.name, price: l.p.price, qty: l.qty }; }),
-    subtotal: sub, shipping: sh, total: total, currency: S.cur, displayTotal: Math.round(conv(total) * 100) / 100,
+    items: lines.map(function (l) { return { id: l.p.id, name: l.p.name, price: eff(l.p), qty: l.qty }; }),
+    subtotal: sub, discount: dsc, coupon: dsc && co.coupon ? co.coupon.code : '', shipping: sh, total: total, currency: S.cur, displayTotal: Math.round(conv(total) * 100) / 100,
     customer: { name: co.name.trim(), phone: co.phone.trim(), email: co.email.trim() },
     delivery: {
       mode: co.mode, zone: co.mode === 'delivery' ? co.zone : co.mode === 'relay' ? co.relay : co.mode === 'intl' ? co.intlZone : 'Boutique Sébénikoro',
@@ -794,7 +930,7 @@ function placeOrder(btn) {
   };
   btn.disabled = true; btn.textContent = 'Envoi en cours…';
   DB.placeOrder(order).then(function () {
-    cart = []; saveCart();
+    cart = []; saveCart(); co.coupon = null;
     var mine = LS.get('ac_my_orders', []); mine.unshift(order.code); LS.set('ac_my_orders', mine.slice(0, 10));
     location.hash = '#/confirmation/' + order.code;
   }).catch(function (e) {
@@ -809,9 +945,10 @@ var FLOW = { collect: ['recue', 'confirmee', 'preparation', 'prete', 'retiree'],
 var PST = { paye: ['ok', 'Payé'], a_verifier: ['warn', 'Paiement à vérifier'], non_paye: ['', 'À payer ' + 'à la remise'], en_attente_paypal: ['warn', 'Paiement en attente'], rembourse: ['bad', 'Remboursé'] };
 function stLabel(s, mode) { if (s === 'expediee' && mode === 'intl') return 'Expédiée'; if (s === 'livree' && mode === 'relay') return 'Disponible au point relais'; return ST[s] || s; }
 function trackUrl(code) { return location.origin + location.pathname + '#/suivi/' + code; }
-function payPill(o) { var p = PST[o.paymentStatus] || ['', o.paymentStatus]; return '<span class="pill ' + p[0] + '">' + p[1] + '</span>'; }
+function payPill(o) { var p = PST[o.paymentStatus] || ['', o.paymentStatus]; if (o.paymentStatus === 'non_paye' && (o.payment.method === 'om' || o.payment.method === 'moov')) p = ['warn', 'En attente de paiement']; return '<span class="pill ' + p[0] + '">' + p[1] + '</span>'; }
 function orderSummary(o) {
   return o.items.map(function (i) { return '<div class="tot small"><span>' + i.qty + ' × ' + esc(i.name) + '</span><span>' + fcfa(i.price * i.qty) + '</span></div>'; }).join('') +
+    (o.discount ? '<div class="tot small" style="color:var(--ok)"><span>Remise' + (o.coupon ? ' (' + esc(o.coupon) + ')' : '') + '</span><span>− ' + fcfa(o.discount) + '</span></div>' : '') +
     '<div class="tot small"><span>' + (o.delivery.mode === 'collect' ? 'Retrait boutique' : 'Livraison') + '</span><span>' + (o.shipping ? fcfa(o.shipping) : 'Gratuit') + '</span></div>' +
     '<div class="tot big"><span>Total</span><span>' + fcfa(o.total) + '</span></div>';
 }
@@ -823,7 +960,7 @@ function vConfirm(code) {
     if (!o) { $('#app').innerHTML = '<div class="empty"><p>Commande introuvable.</p><a class="btn" href="#/suivi">Suivre une commande</a></div>'; return; }
     var m = o.delivery.mode, pay = o.payment.method, next = '';
     if (o.paymentStatus === 'en_attente_paypal') next = '<div class="box"><h2>Finaliser le paiement</h2><p class="small muted">Montant : <b>' + money(o.total, 'EUR') + '</b> (' + fcfa(o.total) + '). Votre commande est réservée en attendant le paiement.</p><div id="ppbox"><div class="sk" style="height:50px"></div></div></div>';
-    else if ((pay === 'om' || pay === 'moov') && o.paymentStatus !== 'paye') next = '<div class="note gold">Paiement ' + (pay === 'om' ? 'Orange Money' : 'Moov Money') + ' : envoyez <b>' + fcfa(o.total) + '</b> au <b>' + esc(pay === 'om' ? STORE.orangeMoney : STORE.moovMoney) + '</b> en indiquant <b>' + esc(o.code) + '</b>. ' + (o.payment.ref ? 'Référence reçue, nous la vérifions.' : 'Envoyez-nous ensuite la référence par WhatsApp.') + '</div>';
+    else next = mmPanel(o);
     var what = m === 'collect' ? 'Votre commande est réservée ' + (STORE.reservationHours || 48) + ' h à la boutique de Sébénikoro. Présentez ce QR code au comptoir.' :
       m === 'intl' ? 'Nous préparons votre colis. Le numéro de suivi du transporteur apparaîtra sur la page de suivi.' :
       'Nous vous appelons pour confirmer, puis notre coursier vous livre.';
@@ -832,7 +969,7 @@ function vConfirm(code) {
       '<h1 style="font-size:1.6rem">Merci ' + esc(o.customer.name.split(' ')[0]) + ' !</h1><p class="muted">' + what + '</p>' +
       '<div class="code" id="ccode">' + esc(o.code) + '</div><div id="qr"></div><div>' + payPill(o) + '</div>' +
       '<div class="row" style="justify-content:center;margin-top:14px"><a class="btn wa" href="' + waLink(waTxt) + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'Envoyer sur WhatsApp</a>' +
-      '<a class="btn ghost" href="#/suivi/' + encodeURIComponent(o.code) + '">' + ic('box', 18) + 'Suivre</a></div></div>' + next +
+      '<a class="btn ghost" href="#/suivi/' + encodeURIComponent(o.code) + '">' + ic('box', 18) + 'Suivre</a><button class="btn ghost" data-print="1">' + ic('print', 18) + 'Reçu</button></div></div>' + next +
       '<div class="box"><h2>Détail</h2>' + orderSummary(o) + '</div><p class="center"><a class="btn ghost" href="#/catalogue">Continuer mes achats</a></p></div>';
     renderQR(o.code);
     if (o.paymentStatus === 'en_attente_paypal') mountPayPal(o);
@@ -885,8 +1022,8 @@ function vTrack(code) {
     var trk = o.tracking && o.tracking.number ? '<div class="note gold"><b>' + esc(o.tracking.carrier || 'Transporteur') + '</b> — n° de suivi : <b>' + esc(o.tracking.number) + '</b></div>' : '';
     $('#tres').innerHTML = '<div class="co"><div class="box"><div class="row" style="justify-content:space-between"><span class="code" style="font-size:1rem">' + esc(o.code) + '</span>' + payPill(o) + '</div>' +
       '<p class="small muted">Passée le ' + fmtDate(o.createdAt) + ' · ' + esc(MODES[m] ? MODES[m].t : m) + (o.delivery.zone ? ' · ' + esc(o.delivery.zone) : '') + '</p>' + tl + trk +
-      (o.paymentStatus === 'en_attente_paypal' ? '<a class="btn gold" href="#/confirmation/' + encodeURIComponent(o.code) + '">Finaliser le paiement</a>' : '') + '</div>' +
-      '<aside class="box">' + orderSummary(o) + '<a class="btn wa block" style="margin-top:12px" href="' + waLink('Bonjour, je souhaite des nouvelles de ma commande ' + o.code) + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'Une question ?</a></aside></div>';
+      (o.paymentStatus === 'en_attente_paypal' ? '<a class="btn gold" href="#/confirmation/' + encodeURIComponent(o.code) + '">Finaliser le paiement</a>' : '') + mmPanel(o) + '</div>' +
+      '<aside class="box">' + orderSummary(o) + '<a class="btn wa block" style="margin-top:12px" href="' + waLink('Bonjour, je souhaite des nouvelles de ma commande ' + o.code) + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'Une question ?</a><button class="btn ghost block" style="margin-top:8px" data-print="1">' + ic('print', 18) + 'Imprimer le reçu</button></aside></div>';
   }).catch(function () { $('#tres').innerHTML = '<div class="box">Connexion impossible. Réessayez quand vous serez en ligne.</div>'; });
 }
 
@@ -897,9 +1034,10 @@ function vStore() {
     '<p class="small muted">Heure de Bamako (GMT).</p><div class="row" style="margin-top:14px">' +
     '<a class="btn wa" href="' + waLink('Bonjour Alou Cissé, ') + '" target="_blank" rel="noopener">' + ic('chat', 18) + 'WhatsApp</a>' +
     '<a class="btn ghost" href="' + telLink() + '">' + ic('phone', 18) + esc(STORE.phone) + '</a>' +
+    (STORE.phone2 ? '<a class="btn ghost" href="' + telLink(STORE.phone2) + '">' + ic('phone', 18) + esc(STORE.phone2) + '</a>' : '') +
     '<a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=' + STORE.lat + ',' + STORE.lng + '">' + ic('pin', 18) + 'Itinéraire</a></div></div>' +
     '<div class="box"><h2>Plan d’accès</h2><div id="mapBox"><button class="mapph" id="mapBtn">' + ic('pin', 32) + '<span>Afficher le plan<br><span class="small muted">(chargé à la demande pour économiser vos données)</span></span></button></div></div>' +
-    '<div class="box"><h2>Click & Collect, comment ça marche ?</h2><ol class="small" style="padding-left:18px;margin:0"><li>Choisissez vos produits et « Retrait en boutique » à la commande.</li><li>Nous mettons les articles de côté pendant ' + (STORE.reservationHours || 48) + ' h.</li><li>Venez à Sébénikoro avec votre QR code ou votre numéro de commande.</li><li>Payez en espèces, Orange Money ou Moov Money, et repartez avec votre produit.</li></ol></div></div>';
+    '<div class="box"><h2>Click & Collect, comment ça marche ?</h2><ol class="small" style="padding-left:18px;margin:0"><li>Choisissez vos produits et « Retrait en boutique » à la commande.</li><li>Nous mettons les articles de côté pendant ' + (STORE.reservationHours || 48) + ' h.</li><li>Venez à Sébénikoro avec votre QR code ou votre numéro de commande.</li><li>Payez en ligne ou sur place (espèces, Orange Money, Moov Money) et repartez avec votre produit.</li></ol></div></div>';
 }
 
 /* ================= ROUTEUR ================= */
@@ -909,12 +1047,13 @@ function route(keepScroll) {
   var v = path[0] || 'home', prev = S.view; S.view = v;
   if (v !== 'produit') S.pq = 1;
   $$('[data-nav]').forEach(function (a) { a.classList.toggle('on', a.dataset.nav === v || (v === 'produit' && a.dataset.nav === 'catalogue') || (v === 'commande' && a.dataset.nav === 'panier')); });
-  var titles = { home: 'Électronique & High-Tech à Bamako', catalogue: 'Catalogue', panier: 'Panier', commande: 'Commande', suivi: 'Suivi de commande', boutique: 'La boutique — Sébénikoro', confirmation: 'Commande confirmée' };
+  var titles = { home: 'Électronique & High-Tech à Bamako', catalogue: 'Catalogue', panier: 'Panier', commande: 'Commande', suivi: 'Suivi de commande', boutique: 'La boutique — Sébénikoro', favoris: 'Mes favoris', confirmation: 'Commande confirmée' };
   switch (v) {
     case 'home': app.innerHTML = vHome(); break;
     case 'catalogue': app.innerHTML = vCatalog(q); bindCatalog(); break;
     case 'produit': {
       var id = decodeURIComponent(path[1] || ''); app.innerHTML = vProduct(id);
+      if (byId(id) && seen[0] !== id) { seen = [id].concat(seen.filter(function (x) { return x !== id; })).slice(0, 8); LS.set('ac_seen', seen); }
       var p = byId(id); if (p) { document.title = p.name + ' — Alou Cissé'; DB.getImage(id).then(function (src) { var im = $('#pdimg'); if (src && im) im.src = src; }); }
       break;
     }
@@ -923,6 +1062,7 @@ function route(keepScroll) {
     case 'confirmation': vConfirm(decodeURIComponent(path[1] || '')); break;
     case 'suivi': vTrack(path[1] ? decodeURIComponent(path[1]) : ''); break;
     case 'boutique': app.innerHTML = vStore(); break;
+    case 'favoris': app.innerHTML = vFav(); break;
     default: app.innerHTML = '<div class="empty"><p>Page introuvable.</p><a class="btn" href="#/">Accueil</a></div>';
   }
   if (v !== 'produit') document.title = 'Alou Cissé — ' + (titles[v] || 'Électronique & High-Tech');
@@ -931,8 +1071,24 @@ function route(keepScroll) {
 
 /* Délégation des clics */
 document.addEventListener('click', function (e) {
-  var t = e.target.closest('[data-add],[data-addq],[data-collect],[data-pq],[data-cq],[data-rm],#placeBtn,#mapBtn,#themeBtn');
+  var t = e.target.closest('[data-add],[data-addq],[data-collect],[data-pq],[data-cq],[data-rm],[data-fav],[data-share],[data-copy],[data-print],[data-cpnrm],#cpnBtn,#instBtn,#placeBtn,#mapBtn,#themeBtn');
   if (!t) return;
+  if (t.dataset.fav) { e.preventDefault(); toggleFav(t.dataset.fav); return; }
+  if (t.dataset.share) {
+    var sp = byId(t.dataset.share), url = location.href, txt = sp ? sp.name + ' — ' + fcfa(eff(sp)) + ' chez ' + (STORE.name || 'Alou Cissé') : '';
+    if (navigator.share) navigator.share({ title: sp ? sp.name : document.title, text: txt, url: url }).catch(function () {});
+    else window.open('https://wa.me/?text=' + encodeURIComponent(txt + ' ' + url), '_blank', 'noopener');
+    return;
+  }
+  if (t.dataset.copy) {
+    var v = t.dataset.copy, ok = function () { toast('Copié : ' + v); };
+    if (navigator.clipboard) navigator.clipboard.writeText(v).then(ok, function () { toast(v); }); else toast(v);
+    return;
+  }
+  if (t.dataset.print) { window.print(); return; }
+  if (t.dataset.cpnrm) { co.coupon = null; $('#cosum').innerHTML = sumHTML(); $('#payN').innerHTML = payNote(); return; }
+  if (t.id === 'cpnBtn') { applyCoupon(); return; }
+  if (t.id === 'instBtn') { e.preventDefault(); if (S.install) { S.install.prompt(); S.install = null; t.hidden = true; } return; }
   if (t.dataset.add) { e.preventDefault(); addToCart(t.dataset.add, 1); return; }
   if (t.dataset.addq) { addToCart(t.dataset.addq, S.pq); return; }
   if (t.dataset.collect) { if (addToCart(t.dataset.collect, S.pq, true)) { co.mode = 'collect'; saveCo(); location.hash = '#/commande'; } return; }
@@ -959,6 +1115,19 @@ function paintTheme() {
   $('#themeColor').setAttribute('content', dark ? '#000000' : '#f5f5f7');
 }
 
+document.addEventListener('submit', function (e) {
+  var f = e.target; if (!f.classList || !f.classList.contains('refF')) return;
+  e.preventDefault();
+  var ref = f.ref.value.trim(), btn = f.querySelector('button');
+  if (ref.length < 4) { toast('Référence trop courte'); return; }
+  btn.disabled = true;
+  DB.submitRef(f.dataset.code, ref).then(function () { toast('Référence envoyée, merci ! Nous vérifions votre paiement.'); route(true); })
+    .catch(function () { btn.disabled = false; toast('Envoi impossible. Réessayez ou envoyez la référence sur WhatsApp.'); });
+});
+document.addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.id === 'cpnIn') { e.preventDefault(); applyCoupon(); } });
+setInterval(function () { $$('.cd[data-end]').forEach(function (el) { el.textContent = left(+el.dataset.end); }); }, 30000);
+window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); S.install = e; var b = $('#instBtn'); if (b) b.hidden = false; });
+
 /* ================= TAUX USD ================= */
 function loadUsd() {
   var c = LS.get('ac_usd', null);
@@ -976,6 +1145,8 @@ function paintChrome() {
   $('#fAddr').textContent = STORE.address || ''; $('#fOpen').textContent = openState().txt;
   $('#fText').textContent = CONTENT.footer || ''; $('#fCopy').textContent = CONTENT.copyright || '';
   $('#fTel').textContent = STORE.phone || ''; $('#fTel').href = telLink();
+  $('#fTel2').textContent = STORE.phone2 || ''; $('#fTel2').href = telLink(STORE.phone2); $('#fTel2').hidden = !STORE.phone2;
+  $('#fab').href = waLink('Bonjour Alou Cissé, '); $('#fab').innerHTML = ic('chat', 26);
   $('#fWa').href = waLink(); $('#fMail').textContent = STORE.email || ''; $('#fMail').href = 'mailto:' + (STORE.email || '');
   var a = $('#annBar'); a.textContent = CONTENT.announce || ''; a.hidden = !CONTENT.announce;
   MODES.collect.s = 'Sébénikoro · gratuit · réservé ' + (STORE.reservationHours || 48) + ' h';
